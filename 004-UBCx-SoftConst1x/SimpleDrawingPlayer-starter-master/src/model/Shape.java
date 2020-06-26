@@ -6,19 +6,19 @@ import sound.MidiSynth;
 import java.awt.*;
 
 
-public class Shape {
-    private static Color PLAYING_COLOR;
+public abstract class Shape {
+    protected static Color PLAYING_COLOR;
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    protected int x;
+    protected int y;
+    protected int width;
+    protected int height;
 
-    private boolean selected;
+    protected boolean selected;
 
-    private MidiSynth midiSynth;
-    private int instrument;
-    private int playLineCoord;
+    protected MidiSynth midiSynth;
+    protected int instrument;
+    protected int playLineCoord;
 
 
     public Shape(Point topLeft, MidiSynth midiSynth) {
