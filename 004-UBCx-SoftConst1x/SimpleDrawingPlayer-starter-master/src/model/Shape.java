@@ -129,12 +129,12 @@ public class Shape {
     }
 
     //EFFECTS: draws the shape
-    private void drawGraphics(Graphics g) {
+    public void drawGraphics(Graphics g) {
         g.drawRect(x, y, width, height);
     }
 
     //EFFECTS: fills the shape
-    private void fillGraphics(Graphics g) {
+    public void fillGraphics(Graphics g) {
         g.fillRect(x, y, width, height);
     }
 
