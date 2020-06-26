@@ -1,3 +1,13 @@
-## Are you having configuration troubles?
+# 004-DrawingPlayer
+**Final project of the Course 004 - Software Constrution - Data Abstractions**
 
-Please go to [this link](https://github.com/UBCx-Software-Construction/intro-to-softconst-lecture-starters/blob/master/README.md) to try to sort the problem out. If all else fails, feel free to post about it on the discussion board: remember to indicate what repo you're having the problem in, and what exactly is going wrong. 
+https://courses.edx.org/courses/course-v1:UBCx+SoftConst1x+3T2017/
+
+Language: Java
+
+Modifications:
+
+
+add a class that implements the new shape by looking at how the Shape class works
+add a tool class that implements the new button by looking at how the ShapeTool class work
+add a button to the tool bar, by examining how it's currently done for all the other buttons, and then duplicating that functionality.
