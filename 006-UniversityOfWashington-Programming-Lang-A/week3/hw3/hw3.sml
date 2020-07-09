@@ -107,11 +107,27 @@ end
 
 
 (*(This problem uses the pattern datatype but is not really about pattern-matching.) A function g has
-been provided to you.
-(a) Use g to define a function count_wildcards that takes a pattern and returns how many Wildcard patterns it contains.
-(b) Use g to define a function count_wild_and_variable_lengths that takes a pattern and returns the number of Wildcard patterns it contains plus the sum of the string lengths of all the variables in the variable patterns it contains. (Use String.size. We care only about variable names; the constructor names are not relevant.)
-(c) Use g to define a function count_some_var that takes a string and a pattern (as a pair) and returns the number of times the string appears as a variable in the pattern. We care only about variable names; the constructor names are not relevant.*)
+been provided to you
+(a) Use g to define a function count_wildcards that takes a pattern and returns
+how many Wildcard patterns it contains.*)
+fun count_wildcards p= 
+  g (fn () => 1) (fn x => 0) p
 
+(*  
+(b) Use g to define a function count_wild_and_variable_lengths that takes a
+pattern and returns the number of Wildcard patterns it contains plus the sum of
+                         the string lengths of all the variables in the variable
+                         patterns it contains. (Use String.size. We care only
+                         about variable names; the constructor names are not
+                         relevant.)*)
+fun count_wild_and_variable_lengths p =
+  g (fn () => 1) (fn x => String.size x) p
+                         
+(*(c) Use g to define a function count_some_var that takes a string and a pattern (as a pair) and returns the number of times the string appears as a variable in the pattern. We care only about variable names; the constructor names are not relevant.*)
+fun count_some_var (s,p)=
+  g (fn () => 0) (fn x => case x = s of
+                              true => 1
+                            | false => 0) p
 
 (*Write a function check_pat that takes a pattern and returns true if and only
 * if all the variables appearing in the pattern are distinct from each other
@@ -122,9 +138,28 @@ been provided to you.
 * and decides if it has repeats. List.exists may be useful. Sample solution is
 * 15 lines. These are hints: We are not requiring foldl and List.exists here,
 * but they make it easier*)
+fun check_pat p=
+  let fun p_string_list(p)=
+	case p of
+	    Variable x        => [x]
+	  | TupleP ps         => List.foldl (fn (p,i) => (p_string_list(p) @ i)) [] ps
+	  | ConstructorP(_,p) => p_string_list(p)
+	  | _                 => []
+       fun distinct(los)=
+         case los of
+              [] => false
+            | [y] => true
+            | x::xs => case List.exists (fn s => s=x) xs of
+                               true => false
+                             | false => distinct(xs)
+   in
+     distinct(p_string_list(p)) 
+   end
 
 (*11. Write a function match that takes a valu * pattern and returns a (string * valu) list option, namely NONE if the pattern does not match and SOME lst where lst is the list of bindings if it does. Note that if the value matches but the pattern has no patterns of the form Variable s, then the result is SOME []. Hints: Sample solution has one case expression with 7 branches. The branch for tuples uses all_answers and ListPair.zip. Sample solution is 13 lines. Remember to look above for the rules for what patterns match what values, and what bindings they produce. These are hints: We are not requiring all_answers and ListPair.zip here, but they make it easier.
 *)
+
+
 
 (*12. Write a function first_match that takes a value and a list of patterns and returns a
 (string * valu) list option, namely NONE if no pattern in the list matches or

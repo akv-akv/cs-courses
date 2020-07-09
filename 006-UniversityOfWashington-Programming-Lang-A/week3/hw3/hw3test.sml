@@ -64,15 +64,29 @@ val test8f =
   all_answers (fn x => if x > 1 then SOME [x] else NONE) [2,3,4] = SOME [2, 3,
   4];
 
-(*
 val test9a = count_wildcards Wildcard = 1
+val test9ab = count_wildcards (TupleP([Wildcard])) = 1
+val test9ac = count_wildcards (TupleP([Wildcard,Wildcard])) = 2
+val test9ad = count_wildcards (TupleP([Wildcard,ConstP(0)])) = 1
+val test9ae = count_wildcards (Variable("a")) = 0
 
 val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
+val test9ba = count_wild_and_variable_lengths (TupleP([Wildcard,ConstP(0)])) = 1
+val test9bb = count_wild_and_variable_lengths (TupleP([Wildcard,Variable("a")])) = 2
+val test9bc = count_wild_and_variable_lengths (TupleP([Wildcard,Variable("abcd")])) = 5
 
 val test9c = count_some_var ("x", Variable("x")) = 1
+val test9ca = count_some_var ("x", Wildcard) = 0
+val test9cb = count_some_var ("x", (TupleP([Variable("x"),Variable("x")]))) = 2
+val test9cc = count_some_var ("x", Variable("xx")) = 0
+val test9cd = count_some_var ("x", (TupleP([Variable("x"),Variable("x")]))) = 2
 
 val test10 = check_pat (Variable("x")) = true
+val test10a = check_pat (Wildcard) = false
+val test10b = check_pat (TupleP([Variable("x"),Variable("x")])) = false
+val test10c = check_pat (TupleP([Variable("x"),Variable("y")])) = true
 
+(*
 val test11 = match (Const(1), UnitP) = NONE
 
 val test12 = first_match Unit [UnitP] = SOME []
