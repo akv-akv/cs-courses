@@ -33,18 +33,38 @@ val test4bd = longest_string2 ["A","BC","DE"] = "DE"
 val test5 = longest_capitalized ["A","bc","C"] = "A"
 val test5a = longest_capitalized ["aB", "bcd", "E"] = "E"
 val test5b = longest_capitalized ["ab", "c", "dE"] = ""
-val test 5c = longest_capitalized [] = ""
-val test 5d = longest_capitalized ["ab", "Abc", "Def"] = "Abc"
+val test5d = longest_capitalized ["ab", "Abc", "Def"] = "Abc"
 
 val test6 = rev_string "abc" = "cba"
 val test6a = rev_string "a" = "a"
 val test6b = rev_string "" = ""
 val test6e = rev_string "AbCd" = "dCbA"
 
+
 val test7 = first_answer (fn x => if x > 3 then SOME x else NONE) [1,2,3,4,5] = 4
+val test7a = ((first_answer (fn x => if x > 3 then SOME x else NONE) [1,2,3])
+handle NoAnswer => 4) = 4
+val test7b = ((first_answer (fn x => if x > 3 then SOME x else NONE) []) 
+handle NoAnswer => 4) = 4
+
 
 val test8 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
+val test8a = all_answers (fn x => if x = 1 then SOME [x] else NONE)
+[1,2,3,4,5,6,7] = NONE 
+val test8b = all_answers (fn x => if x = 1 then SOME [x] else NONE)
+[1,2,1,3,4,5,6,7] = NONE
+val test8c = all_answers (fn x => if x = 1 then SOME [x] else NONE) [] = SOME []
+val test8d = 
+  all_answers (fn x => if x = 1 then SOME [x] else NONE) [1,1,1] =
+  SOME [1,1,1]
+val test8e = 
+  all_answers (fn x => if x = 1 then SOME [x] else NONE) [] =
+  SOME [];
+val test8f = 
+  all_answers (fn x => if x > 1 then SOME [x] else NONE) [2,3,4] = SOME [2, 3,
+  4];
 
+(*
 val test9a = count_wildcards Wildcard = 1
 
 val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
@@ -56,4 +76,4 @@ val test10 = check_pat (Variable("x")) = true
 val test11 = match (Const(1), UnitP) = NONE
 
 val test12 = first_match Unit [UnitP] = SOME []
-
+*)
