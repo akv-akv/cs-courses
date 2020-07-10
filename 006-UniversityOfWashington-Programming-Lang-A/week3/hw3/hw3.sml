@@ -156,10 +156,28 @@ fun check_pat p=
      distinct(p_string_list(p)) 
    end
 
-(*11. Write a function match that takes a valu * pattern and returns a (string * valu) list option, namely NONE if the pattern does not match and SOME lst where lst is the list of bindings if it does. Note that if the value matches but the pattern has no patterns of the form Variable s, then the result is SOME []. Hints: Sample solution has one case expression with 7 branches. The branch for tuples uses all_answers and ListPair.zip. Sample solution is 13 lines. Remember to look above for the rules for what patterns match what values, and what bindings they produce. These are hints: We are not requiring all_answers and ListPair.zip here, but they make it easier.
+(*11. Write a function match that takes a valu * pattern and returns a (string * valu) list option, 
+* namely NONE if the pattern does not match and SOME lst where lst is the list of bindings if it does. 
+* Note that if the value matches but the pattern has no patterns of the form Variable s, 
+* then the result is SOME []. Hints: Sample solution has one case expression with 7 branches. 
+* The branch for tuples uses all_answers and ListPair.zip. Sample solution is 13 lines. 
+* Remember to look above for the rules for what patterns match what values, and what bindings they produce. 
+* These are hints: We are not requiring all_answers and ListPair.zip here, but they make it easier.
 *)
-
-
+fun match(v, p)=
+  case (v,p) of
+       (_,Wildcard) => SOME []
+     | (Unit,UnitP) => SOME []
+     | (Const v1, ConstP p1) => if v1 = p1 then SOME []  else NONE
+     | (_, Variable s) => SOME [(s,v)]
+     | (Constructor(s1,v1),ConstructorP(s2,p2)) => if s1 = s2 then match(v1,p2)
+                                                   else NONE
+     | (Tuple vs, TupleP ps) => if List.length vs = List.length ps 
+                                then case all_answers match (ListPair.zip(vs,ps)) of
+                                          SOME v2 => SOME v2
+                                        | _ => NONE
+                                else NONE
+     | (_,_) => NONE
 
 (*12. Write a function first_match that takes a value and a list of patterns and returns a
 (string * valu) list option, namely NONE if no pattern in the list matches or
@@ -167,3 +185,7 @@ SOME lst where lst is the list of bindings for the first pattern in the list
 that matches. Use first_answer and a handle-expression. Hints: Sample solution
 is 3 lines.
 *)
+
+fun first_match(v,lop)=
+  SOME (first_answer (fn x => match(v,x)) lop)
+  handle NoAnswer => NONE

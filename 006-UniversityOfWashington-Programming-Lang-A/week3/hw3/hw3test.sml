@@ -86,8 +86,12 @@ val test10a = check_pat (Wildcard) = false
 val test10b = check_pat (TupleP([Variable("x"),Variable("x")])) = false
 val test10c = check_pat (TupleP([Variable("x"),Variable("y")])) = true
 
-(*
+
 val test11 = match (Const(1), UnitP) = NONE
+val test11a = match (Const(3), Wildcard) = SOME []
+val test11b = match (Const 3, ConstP 3) = SOME []
+val test11c = match (Unit, UnitP) = SOME []
+val test11d = match (Unit, Wildcard) = SOME []
+val test11e = match (Tuple([Unit,Unit]), TupleP([UnitP,UnitP])) = SOME []
 
 val test12 = first_match Unit [UnitP] = SOME []
-*)
