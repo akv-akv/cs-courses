@@ -26,8 +26,8 @@
 ;; list of strings. Each element of the output should be the corresponding element of the input appended
 ;; with suffix (with no extra space between the element and suffix). You must use Racket-library
 ;; functions map and string-append. Sample solution: 2 lines.
-(define (string-append-map xs suffix) '()) ;stub
-
+(define (string-append-map xs suffix)
+  (map (lambda (x) (string-append x suffix)) xs))
 
 ;; Problem 3
 ;; Write a function list-nth-mod that takes a list xs and a number n.
@@ -37,7 +37,11 @@
 ;; Else return the ith element of the list where we count from zero and i is the remainder
 ;; produced when dividing n by the list’s length. Library functions length, remainder, car,
 ;; and list-tail are all useful – see the Racket documentation. Sample solution is 6 lines.
-(define (list-nth-mod xs n) '()) ;stub
+(define (list-nth-mod xs n)
+  (cond
+    [(< n 0) (error "list-nth-mod: negative number")]
+    [(null? xs) (error "list-nth-mod: empty list")]
+    [#t (car (list-tail xs (remainder n (length xs))))]))
 
 
 ;; Problem 4
@@ -45,21 +49,37 @@
 ;; It returns a list holding the first n values produced by s in order.
 ;; Assume n is non-negative. Sample solution: 5 lines.
 ;;Note: You can test your streams with this function instead of the graphics code.
-(define (stream-for-n-steps s n) '())
-
+(define (stream-for-n-steps s n)
+  (local [(define (f s0 acc)
+          (cond
+            [(= (length acc) n) acc]
+            [#t (f (cdr (s0)) (append acc (list (car (s0)))))]))]
+    (f s '())))
 
 ;; Problem 5
 ;; Write a stream funny-number-stream that is like the stream of natural numbers (i.e., 1, 2, 3, ...)
 ;; except numbers divisble by 5 are negated (i.e., 1, 2, 3, 4, -5, 6, 7, 8, 9, -10, 11, ...).
 ;; Remember a stream is a thunk that when called produces a pair.
 ;; Here the car of the pair will be a number and the cdr will be another stream.
-(define funny-number-stream '())
+(define funny-number-stream
+  (letrec ([f (lambda (x) (cons
+                           (cond
+                             [(= 0 (remainder x 5)) (- x)]
+                             [#t x])
+                           (lambda () (f (+ x 1)))))])
+   (lambda () (f 1))))
 
 ;; Problem 6
 ;; Write a stream dan-then-dog, where the elements of the stream alternate between the strings "dan.jpg" and "dog.jpg" (starting with "dan.jpg").
 ;; More specifically, dan-then-dog should be a thunk that when called produces a pair of "dan.jpg"
 ;; and a thunk that when called produces a pair of "dog.jpg" and a thunk that when called... etc. Sample solution: 4 lines.
-
+(define dan-then-dog
+  (letrec ([f (lambda (x) (cons
+                           (cond
+                             [(odd? x) "dan.jpg"]
+                             [#t "dog.jpg"])
+                           (lambda () (f (+ x 1)))))])
+   (lambda () (f 1))))
 
 ;; Problem 7
 ;; Write a function stream-add-zero that takes a stream s and returns another stream.
@@ -67,6 +87,7 @@
 ;; Sample solution: 4 lines.
 ;; Hint: Use a thunk that when called uses s and recursion.
 ;; Note: One of the provided tests in the file using graphics uses (stream-add-zero dan-then-dog) with place-repeatedly.
+(define (stream-add-zero s) '())
 
 
 ;; Problem 8
