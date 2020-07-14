@@ -87,7 +87,9 @@
 ;; Sample solution: 4 lines.
 ;; Hint: Use a thunk that when called uses s and recursion.
 ;; Note: One of the provided tests in the file using graphics uses (stream-add-zero dan-then-dog) with place-repeatedly.
-(define (stream-add-zero s) '())
+(define (stream-add-zero s)
+  (letrec ([f (lambda (s0) (cons (cons 0 (car (s0))) (lambda () (f (cdr (s0))))))])
+    (lambda () (f s))))
 
 
 ;; Problem 8
@@ -98,7 +100,12 @@
 ;; then the stream would produce, (1 . "a"), (2 . "b"), (3 . "a"), (1 . "b"), (2 . "a"), (3 . "b"), (1 . "a"), (2 . "b"), etc.
 ;; Sample solution is 6 lines and is more complicated than the previous stream problems.
 ;; Hints: Use one of the functions you wrote earlier. Use a recursive helper function that takes a number n and calls itself with (+ n 1) inside a thunk.
-
+(define (cycle-lists xs ys)
+  (letrec ([f (lambda (n) (cons
+                          (cons (list-nth-mod xs n)
+                                (list-nth-mod ys n))
+                          (lambda () (f (+ 1 n)))))])
+    (lambda () (f 0)))) 
 
 ;; Problem 9
 ;; Write a function vector-assoc that takes a value v and a vector vec.
@@ -107,16 +114,26 @@
 ;; Process the vector elements in order starting from 0. You must use library functions vector-length, vector-ref, and equal?.
 ;; Return #f if no vector element is a pair with a car field equal to v, else return the first pair with an equal car field.
 ;; Sample solution is 9 lines, using one local recursive helper function.
-
+(define (vector-assoc v vec)
+  (letrec ([f (lambda (x)
+                (cond
+                  [(= x (vector-length vec)) #f]
+                  [(pair? (vector-ref vec x)) (let ([elt (vector-ref vec x)])
+                    (if (equal? (car elt) v)
+                                   elt
+                                   (f (+ x 1))))]
+                  [#t (lambda () f (+ x 1))]))])
+  (f 0)))
+   
 
 ;; Problem 10
-;; Write a function cached-assoc that takes a list xs and a number n and returns a function that takes one argument v
-;; and returns the same thing that (assoc v xs) would return. However, you should use an n-element cache of recent results to possibly make
-;; this function faster than just calling assoc (if xs is long and a few elements are returned often).
-;; The cache must be a Racket vector of length n that is created by the call to cached-assoc (use Racket library function vector or make-vector)
-;; and used-and-possibly-mutated each time the function returned by cached-assoc is called. Assume n is positive.
-;; The cache starts empty (all elements #f). When the function returned by cached-assoc is called, it first checks the cache for the answer.
-;; If it is not there, it uses assoc and xs to get the answer and if the result is not #f (i.e., xs has a pair that matches),
-;; it adds the pair to the cache before returning (using vector-set!). The cache slots are used in a round-robin fashion:
-;; the first time a pair is added to the cache it is put in position 0, the next pair is put in position 1, etc. up to position n − 1
-;; and then back to position 0 (replacing the pair already there), then position 1, etc.
+;; Write a function cached-assoc that takes a list xs and a number n and returns a function that takes one argument v and returns the same thing that (assoc v xs) would return. However, you should use an n-element cache of recent results to possibly make this function faster than just calling assoc (if xs is long and a few elements are returned often). The cache must be a Racket vector of length n that is created by the call to cached-assoc (use Racket library function vector or make-vector) and used-and-possibly-mutated each time the function returned by cached-assoc is called. Assume n is positive.
+;; The cache starts empty (all elements #f). When the function returned by cached-assoc is called, it first checks the cache for the answer. If it is not there, it uses assoc and xs to get the answer and if the result is not #f (i.e., xs has a pair that matches), it adds the pair to the cache before returning (using vector-set!). The cache slots are used in a round-robin fashion: the first time a pair is added to the cache it is put in position 0, the next pair is put in position 1, etc. up to position n − 1 and then back to position 0 (replacing the pair already there), then position 1, etc.
+(define (cached-assoc xs n)
+  (letrec ([cache (make-vector 0)]
+           [f (lambda (x) (or (vector-assoc x cache)
+                              (letrec ([f2 (assoc x xs)])
+                                    (if f2
+                                        (begin (vector-append cache (make-vector 1 f2)) f2)
+                                        #f))))])
+  f))

@@ -26,7 +26,9 @@
                   ".jpg") '("dan.jpg" "dog.jpg" "curry.jpg" "dog2.jpg") "string-append-map test")
    
    ; list-nth-mod test
-   (check-equal? (list-nth-mod (list 0 1 2 3 4) 2) 2 "list-nth-mod test")
+   (check-equal? (list-nth-mod (list 0 1 2 3 4) 2) 2 "list-nth-mod test 1")
+   ;(check-equal? (list-nth-mod (list 0 1 2 3 4) -2) "list-nth-mod: negative number" "list-nth-mod test 2")
+   ;(check-equal? (list-nth-mod '() 2) "list-nth-mod: empty list" "list-nth-mod test 3")
    
    ; stream-for-n-steps test
    (check-equal? (stream-for-n-steps ones 2) (list 1 1) "stream-for-n-steps test")
@@ -52,7 +54,7 @@
    (check-equal? ((cached-assoc (list (cons 1 2) (cons 3 4)) 3) 3) (cons 3 4) "cached-assoc test")
    
    ; while-less test
-   (check-equal? (while-less 7 do (begin (set! a (+ a 1)) a)) #t "while-less test")
+   ;(check-equal? (while-less 7 do (begin (set! a (+ a 1)) a)) #t "while-less test")
    
    ))
 
