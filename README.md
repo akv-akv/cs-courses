@@ -9,3 +9,4 @@ This repository is aimed to store progress of learning CS.
 |3| [University of British Columbia - Software Construction: Object-Oriented Design](./005-UBCx-SoftConst2x)|
 |4| [University of Washington - Programming languages: Part A](./006-UniversityOfWashington-Programming-Lang-A)|
 |5| [University of Washington - Programming languages: Part B](./007-UniversityOfWashington-Programming-Lang-B)|
+|6| [University of Washington - Programming languages: Part C](./008-UniversityOfWashington-Programming-Lang-C)|
