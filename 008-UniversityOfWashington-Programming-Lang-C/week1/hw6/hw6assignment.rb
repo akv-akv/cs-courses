@@ -27,6 +27,7 @@ class MyPiece < Piece
     MyPiece.new(All_My_Pieces.sample, board)
   end
 
+  
 end
 
 class MyBoard < Board
@@ -38,10 +39,23 @@ class MyBoard < Board
     @game = game
     @delay = 500
   end
+  
+  def rotate_180
+    if !game_over? and @game.is_running?
+      @current_block.move(0, 0, 2)
+    end
+    draw
+  end
+
 
   # gets the next piece
   def next_piece
-    @current_block = MyPiece.next_piece(self)
+    if !@cheat
+      @current_block = MyPiece.next_piece(self) #piece creation from My_All_Pieces
+    else
+      @current_block = MyPiece.new([[1,1]],self) # square 1x1
+    end
+    @cheat = false
     @current_pos = nil
   end
   
@@ -58,6 +72,16 @@ class MyBoard < Board
     remove_filled
     @delay = [@delay - 2, 80].max
   end
+  
+  #if cheat key pressed then checks score>100, reduces score by 100 and sets cheat variable true
+  def set_cheat
+    if @game.is_running?
+      if @score > 100
+        @score -= 100
+        @cheat = true;
+      end
+    end
+  end
 
 end
 
@@ -72,7 +96,13 @@ class MyTetris < Tetris
     @board.draw
   end
 
+  def key_bindings
+   super()
+   @root.bind('u' , proc {@board.rotate_180}) #rotate piece 180 deg
+   @root.bind('c' , proc {@board.set_cheat})  #cheat
+  end 
 
+  
 end
 
 
