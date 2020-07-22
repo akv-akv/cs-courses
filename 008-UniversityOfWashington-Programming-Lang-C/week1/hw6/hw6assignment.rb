@@ -31,54 +31,56 @@ class MyPiece < Piece
 end
 
 class MyBoard < Board
-  # your enhancements here
-  def initialize (game)
-    @grid = Array.new(num_rows) {Array.new(num_columns)}
-    @current_block = MyPiece.next_piece(self)
-    @score = 0
-    @game = game
-    @delay = 500
+# your enhancements here
+def initialize (game)
+  @grid = Array.new(num_rows) {Array.new(num_columns)}
+  @current_block = MyPiece.next_piece(self)
+  @score = 0
+  @cheat = 0
+  @game = game
+  @delay = 500
+end
+
+def rotate_180
+  if !game_over? and @game.is_running?
+    @current_block.move(0, 0, 2)
   end
-  
-  def rotate_180
-    if !game_over? and @game.is_running?
-      @current_block.move(0, 0, 2)
-    end
-    draw
-  end
+  draw
+end
 
 
-  # gets the next piece
-  def next_piece
-    if !@cheat
-      @current_block = MyPiece.next_piece(self) #piece creation from My_All_Pieces
-    else
-      @current_block = MyPiece.new([[1,1]],self) # square 1x1
-    end
-    @cheat = false
-    @current_pos = nil
+# gets the next piece
+def next_piece
+  if @cheat <= 0
+    @current_block = MyPiece.next_piece(self) #piece creation from My_All_Pieces
+    @cheat = 0
+  else
+    @current_block = MyPiece.new([[[1,1]]],self) # square 1x1
+    @cheat = @cheat - 1
   end
-  
-  # gets the information from the current piece about where it is and uses this
-  # to store the piece on the board itself.  Then calls remove_filled.
-  def store_current
-    locations = @current_block.current_rotation
-    displacement = @current_block.position
-    (0..(locations.size-1)).each{|index| 
-      current = locations[index];
-      @grid[current[1]+displacement[1]][current[0]+displacement[0]] = 
-      @current_pos[index]
-    }
-    remove_filled
-    @delay = [@delay - 2, 80].max
-  end
-  
-  #if cheat key pressed then checks score>100, reduces score by 100 and sets cheat variable true
+  @current_pos = nil
+end
+
+# gets the information from the current piece about where it is and uses this
+# to store the piece on the board itself.  Then calls remove_filled.
+def store_current
+  locations = @current_block.current_rotation
+  displacement = @current_block.position
+  (0..(locations.size-1)).each{|index| 
+    current = locations[index];
+    @grid[current[1]+displacement[1]][current[0]+displacement[0]] = 
+    @current_pos[index]
+  }
+  remove_filled
+  @delay = [@delay - 2, 80].max
+end
+
+#if cheat key pressed then checks score>100, reduces score by 100 and sets cheat variable true
   def set_cheat
     if @game.is_running?
-      if @score > 100
+      if @score >= 100
         @score -= 100
-        @cheat = true;
+        @cheat += 1;
       end
     end
   end
