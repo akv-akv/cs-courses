@@ -21,3 +21,7 @@ table,th,td
     padding: 5px;
     text-align: center;
 }
+img
+{
+    max-width: 75%;
+}

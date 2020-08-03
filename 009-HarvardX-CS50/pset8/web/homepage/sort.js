@@ -7,6 +7,7 @@ var bubble_counter = 0;
 var insertion_counter = 0;
 var merge_counter = 0;
 var quicksort_counter = 0;
+Array.range = (start, end) => Array.from({length: (end - start)}, (v, k) => k + start);
 
 // Set all counters to zero
 function reset_counters()
@@ -221,7 +222,6 @@ async function insertion_Sort_Visual(ar)
         }
         arr[j+1] = elt;
 
-
         fill(arr);
         document.getElementById("11").innerHTML = '';
         await sleep(5*speed);
@@ -320,6 +320,34 @@ function merge_Sort(arr){
 
 // merge the array back and return the result.
 // note that we are using the helper function we created above.
+  return merge(firstHalf, secondHalf);
+}
+
+// Merge for visualization
+function merge_Sort_Visual(arr){
+
+// recursion base case
+// it checks if the array length is less than or equal to 1.
+// if that's the case return the arr else keep splicing.
+  if(arr.length <= 1) return arr;
+  // remember that we said merge sort uses divide and conquer
+// algorithm pattern
+
+// it firsts know the half point of the array.
+  let halfPoint = Math.ceil(arr.length / 2);
+
+// and then splice the array from the beginning up to the half point.
+// but for the fact that merge sort needs the array to be of one element, it will keep splicing that half till it fulfills the condition of having one element array.
+
+  let firstHalf = merge_Sort_Visual(arr.splice(0, halfPoint));
+
+// second array from the half point up to the end of the array.
+  let secondHalf = merge_Sort_Visual(arr.splice(-halfPoint));
+
+// merge the array back and return the result.
+// note that we are using the helper function we created above.
+  //await sleep(10 * speed);
+  fill(arr);
   return merge(firstHalf, secondHalf);
 }
 
