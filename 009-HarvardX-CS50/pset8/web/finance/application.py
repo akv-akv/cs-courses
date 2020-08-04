@@ -23,6 +23,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
@@ -113,13 +114,71 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+
+    # If user reached route via POST show quotation results
+    if request.method == "POST":
+
+        # Lookup for the symbol with helper function
+        data = lookup(request.form.get("symbol"))
+
+        # If None returned then render warning
+        if not data:
+            return apology("invalid symbol")
+
+        # Else render response template
+        else:
+            return render_template("quoted.html", name=data['name'],
+                                   symbol=request.form.get("symbol"),
+                                   price=data['price'])
+
+    # If user reached route via GET show the request form
+    else:
+        return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    return apology("TODO")
+
+    # If POST method used then proceed with registration procedure
+    if request.method == "POST":
+
+        # Check if username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+
+        # Check if username doesn't exist in database
+        # 1. Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))
+
+        # 2. Check if rows is empty, else render warning
+        if len(rows) != 0:
+            return apology("username already exists", 403)
+
+        # Check if password was submitted
+        if not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        # Check if confirmation was submitted
+        if not request.form.get("confirmation"):
+            return apology("must provide password confirmation", 403)
+
+        # Check if password and confirmation are equal
+        if request.form.get("password") != request.form.get("confirmation"):
+            return apology("confirmation doesn't match password", 403)
+
+        # Insert user data into the database
+        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hashed_password)",
+                   username=request.form.get("username"),
+                   hashed_password=generate_password_hash(request.form.get("password")))
+
+        # Redirect user to
+        return redirect("/")
+
+    # If method GET then render template of registration page
+    else:
+        return render_template("register.html")
 
 
 @app.route("/sell", methods=["GET", "POST"])
