@@ -1,7 +1,6 @@
 """Hack assembler main file"""
 
-from parser import parse 
-from code import code
+from parser import prepare, code 
 from sys import argv
 
 def main():
@@ -9,7 +8,7 @@ def main():
     # Read lines from asm file
     lines = openasm(filename)
     # Parse lines to commands
-    commands = parse(lines)
+    commands = prepare(lines)
     # Convert commands to binary
     binarycommands = code(commands)
     # Write to the output file
@@ -26,7 +25,7 @@ def writehack(commands):
     outputfilename = filename[:(len(filename)-3)] + 'hack'
     with open(outputfilename, 'w') as f:
         for command in commands:
-            f.write('{}'.format(command))
+            f.write('{}\n'.format(command))
 
 
 #When running as a script

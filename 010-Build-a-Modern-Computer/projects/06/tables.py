@@ -1,5 +1,4 @@
-"""Tables for Hack Assembler
-"""
+"""Tables for Hack Assembler"""
 
 dest = {'null':'000',
 	'M':'001',
@@ -51,3 +50,15 @@ comp = {
     'D&M': '1000000',
     'D|M': '1010101',
 }
+
+symbols = {
+    'SP':'0', 
+    'LCL':'1', 
+    'ARG':'2', 
+    'THIS':'3', 
+    'THAT':'4', 
+    'SCREEN':'16384', 
+    'KBD':'24576'
+}
+for i in range(0, 16):
+    symbols['R' + str(i)] = str(i)
