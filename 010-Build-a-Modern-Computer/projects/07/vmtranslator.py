@@ -10,7 +10,6 @@ class CodeWriter:
         self.f= open(self.outputFileName, 'w')
     
     def translatePushPop(self):
-        # TODO
         """ Translates push and pop commands and writes
         it to file"""
         
@@ -29,6 +28,27 @@ class CodeWriter:
             elif segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that']:
                 # Put value from command value argument to D
                 self.value_to_D()
+                if segment == 'temp':
+                    self.f.write('@5\n')
+                    self.f.write('A=D+A\n')
+                elif segment == 'pointer':
+                    self.f.write('@3\n')
+                    self.f.write('A=D+A\n')
+                elif segment == 'local':
+                    self.f.write('@LCL\n')
+                    self.f.write('A=D+M\n')
+                elif segment == 'argument':
+                    self.f.write('@ARG\n')
+                    self.f.write('A=D+M\n')
+                elif segment == 'this':
+                    self.f.write('@THIS\n')
+                    self.f.write('A=D+M\n')
+                elif segment == 'that':
+                    self.f.write('@THAT\n')
+                    self.f.write('A=D+M\n')
+                else:
+                    pass
+                self.f.write('D=M\n')
             else:
                 raise ValueError('Segment type not supported')
             # Write value from D to Stack
@@ -38,7 +58,39 @@ class CodeWriter:
         
         # Translate pop command
         if self.parser.commandType() == 'C_POP':
-            return 0
+            if segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that']:
+                # Put value from command value argument to D
+                self.value_to_D()
+                # Get data from registers
+                if segment == 'temp':
+                    self.f.write('@5\n')
+                    self.f.write('D=D+A\n')
+                elif segment == 'pointer':
+                    self.f.write('@3\n')
+                    self.f.write('D=D+A\n')
+                elif segment == 'local':
+                    self.f.write('@LCL\n')
+                    self.f.write('D=D+M\n')
+                elif segment == 'argument':
+                    self.f.write('@ARG\n')
+                    self.f.write('D=D+M\n')
+                elif segment == 'this':
+                    self.f.write('@THIS\n')
+                    self.f.write('D=D+M\n')
+                elif segment == 'that':
+                    self.f.write('@THAT\n')
+                    self.f.write('D=D+M\n')
+                else:
+                    pass
+                # TODO
+                self.f.write('@13\n')
+                self.f.write('M=D\n')
+                self.copy_from_stack_to_D()
+                self.f.write('@13\n')
+                self.f.write('A=M\n')
+                self.f.write('M=D\n')
+                
+
 
     def value_to_D(self):
         # Get value from command parser
@@ -62,13 +114,20 @@ class CodeWriter:
         # Increment value of SP
         self.f.write('M=M+1\n')
 
-    def pop_from_stack_to_D(self):
+    def copy_from_stack_to_D(self):
         # At Stack Pointer
         self.f.write('@SP\n')
         # Decrement SP
         self.f.write('AM=M-1\n')
         # Store top value from stack to D
         self.f.write('D=M\n')
+
+    def pop_top_stack(self):
+        # At Stack Pointer
+        self.f.write('@SP\n')
+        # Decrement SP
+        self.f.write('AM=M-1\n')
+
 
             
     def translateArithmetic(self):
@@ -77,26 +136,31 @@ class CodeWriter:
         to file"""
         # Get command from parser
         command = self.parser.commandParts[0]
-        f = self.outputFile
-        
+        self.f.write('// {}\n'.format(self.parser.command))
         if command == 'add':
-            self.f.write()
+            self.copy_from_stack_to_D()
+            self.f.write('A=A-1\n')
+            self.f.write('D=D+M\n')
+            self.f.write('M=D\n')
         elif command == 'sub':
-            self.f.write()
+            self.copy_from_stack_to_D()
+            self.f.write('A=A-1\n')
+            self.f.write('D=M-D\n')
+            self.f.write('M=D\n')
         elif command == 'neg':
-            self.f.write()
+            self.f.write('')
         elif command == 'eq':
-            self.f.write()
+            self.f.write('')
         elif command == 'gt':
-            self.f.write()
+            self.f.write('')
         elif command == 'lt':
-            self.f.write()
+            self.f.write('')
         elif command == 'and':
-            self.f.write()
+            self.f.write('')
         elif command == 'or':
-            self.f.write()
+            self.f.write('')
         elif command == 'not':
-            self.f.write()
+            self.f.write('')
 
 
 
