@@ -26,11 +26,14 @@ class CodeWriter:
             if segment == 'constant':
                 # Put value from command value argument to D
                 self.value_to_D()
-            elif segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that']:
+            elif segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that', 'static']:
                 # Put value from command value argument to D
                 self.value_to_D()
                 if segment == 'temp':
                     self.f.write('@5\n')
+                    self.f.write('A=D+A\n')
+                elif segment == 'static':
+                    self.f.write('@16\n'.format(value))
                     self.f.write('A=D+A\n')
                 elif segment == 'pointer':
                     self.f.write('@3\n')
@@ -59,12 +62,15 @@ class CodeWriter:
         
         # Translate pop command
         if self.parser.commandType() == 'C_POP':
-            if segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that']:
+            if segment in ['temp', 'pointer', 'local', 'argument', 'this', 'that', 'static']:
                 # Put value from command value argument to D
                 self.value_to_D()
                 # Get address of register cell 
                 if segment == 'temp':
                     self.f.write('@5\n')
+                    self.f.write('D=D+A\n')
+                elif segment == 'static':
+                    self.f.write('@16\n')
                     self.f.write('D=D+A\n')
                 elif segment == 'pointer':
                     self.f.write('@3\n')
@@ -93,6 +99,7 @@ class CodeWriter:
                 self.f.write('A=M\n')
                 # Store value from D into this address
                 self.f.write('M=D\n')
+            
                 
 
 
