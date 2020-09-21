@@ -12,4 +12,5 @@ This repository is aimed to store progress of learning CS.
 |6| [University of Washington - Programming languages: Part C](./008-UniversityOfWashington-Programming-Lang-C)|
 |7| [Harvard - Introduction to Computer Science - CS50](./009-HarvardX-CS50)|
 |8| [Hebrew University of Jerusalem - Nand2Tetris](./010-Build-a-Modern-Computer)|
+|9| [Stanford - Databases: Relational databases and SQL](./017-Databases-Relational-DB-and-SQL)|
 
