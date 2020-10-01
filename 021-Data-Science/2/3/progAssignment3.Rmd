@@ -80,7 +80,7 @@ best <- function(state, outcome) {
                                "heart failure",
                                "pneumonia")]
     
-    ## Convert data to numeric format
+    ## Convert data to numeric format (silence warnings when converting text to NA)
     outcomeTbl[, 3:5] <- suppressWarnings(sapply(outcomeTbl[, 3:5], as.numeric))
 
     ## Filter complete cases (only data without NA)
@@ -102,4 +102,57 @@ best("MD", "pneumonia")
 
 ## Ranking hospitals by outcome in a state
 
+Write a function called **rankhospital** that takes three arguments: the 2-character abbreviated name of a state **(state)**, an outcome **(outcome)**, and the ranking of a hospital in that state for that outcome **(num)**. The function reads the **outcome-of-care-measures.csv** file and returns a character vector with the name of the hospital that has the ranking specified by the `num` argument.
+
+```{r}
+rankhospital <- function(state, outcome, num = "best") { 
+    ## Read outcome data
+    outcomeTbl <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+
+    ## Check that state is valid
+    if (!state %in% unique(outcomeTbl[['State']])) {
+        stop('invalid state') ## Throw an error with information message
+    }
+    ## Check if outcome is valid
+    if (!outcome %in% c('heart attack', 'heart failure', 'pneumonia')) {
+        stop('invalid outcome')
+    }
+    
+    ## Rename columns
+    colnames(outcomeTbl)[11] <- 'heart attack'
+    colnames(outcomeTbl)[17] <- 'heart failure'
+    colnames(outcomeTbl)[23] <- 'pneumonia'
+    
+    ## Filter data by state and select only required columns
+    outcomeTbl <- outcomeTbl[outcomeTbl$State == state,
+                             c("Hospital.Name",
+                               "State",
+                               "heart attack",
+                               "heart failure",
+                               "pneumonia")]
+    
+    ## Convert data to numeric format (silence warnings when converting text to NA)
+    outcomeTbl[, 3:5] <- suppressWarnings(sapply(outcomeTbl[, 3:5], as.numeric))
+
+    ## Filter complete cases (only data without NA)
+    outcomeTbl <- outcomeTbl[complete.cases(outcomeTbl), ]
+    
+    ## Return hospital name in that state with lowest 30-day death ## rate
+    if (num == 'best') {
+        return(outcomeTbl[order(outcomeTbl[[outcome]],outcomeTbl$Hospital.Name), ][1,1])
+        } else if (num == 'worst') {
+        return(outcomeTbl[order(-outcomeTbl[[outcome]],outcomeTbl$Hospital.Name), ][1,1])
+        } else {
+        return(outcomeTbl[order(outcomeTbl[[outcome]],outcomeTbl$Hospital.Name), ][num,1])    
+    } 
+}
+
+```
+
+Function tests:
+```{r}
+rankhospital("TX", "heart failure", 4)
+rankhospital("MD", "heart attack", "worst")
+rankhospital("MN", "heart attack", 5000)
+```
 ## Ranking hospitals in all states
