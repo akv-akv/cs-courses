@@ -13,4 +13,6 @@ This repository is aimed to store progress of learning CS.
 |7| [Harvard - Introduction to Computer Science - CS50](./009-HarvardX-CS50)|
 |8| [Hebrew University of Jerusalem - Nand2Tetris](./010-Build-a-Modern-Computer)|
 |9| [Stanford - Databases: Relational databases and SQL](./017-Databases-Relational-DB-and-SQL)|
+|10| [Stanford - Machine learning](./020-Machine-Learning)|
+|11| [John Hopkins University - Data Science Specialization](./021-Data-Science)|
 
