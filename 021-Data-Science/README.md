@@ -8,13 +8,13 @@ This Specialization covers the concepts and tools you'll need throughout the ent
 | 1   |The Data Scientist’s Toolbox| 
 | 2   |[R Programming](./2/README.md)|   
 | 3   |[Getting and Cleaning Data](./3/README.md)|
-| 4   |Exploratory Data Analysis |
-|5    |Reproducible Research |
-|6|Statistical Inference|
-|7|Regression Models|
-|8|Practical Machine Learning|
-|9|Developing Data Products|
-|10|Data Science Capstone|
+| 4   |[Exploratory Data Analysis](./4/README.md)|
+|5    |[Reproducible Research] |
+|6|[Statistical Inference]|
+|7|[Regression Models]|
+|8|[Practical Machine Learning]|
+|9|[Developing Data Products]|
+|10|[Data Science Capstone]|
 
 
 
