@@ -1,4 +1,4 @@
-#Exploratory Analysis - Coursera - JHU
+# Exploratory Analysis - Coursera - JHU
 |#|Course part|Description|Result|
 |-|-----------|-----------|------|
 |1|Week 1|||
