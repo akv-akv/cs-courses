@@ -6,4 +6,4 @@
 |2|Week 2| |
 |3|Week 3| |
 |4|Week 4| |
-|5|Course project| |
+|5|[Course project](./course_project/README.md)| |
