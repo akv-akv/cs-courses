@@ -28,7 +28,7 @@ the logical vector is TRUE. which(agricultureLogical)
 
 ``` r
 ## Download data and read into R
-download.file(q1datapath, destfile = 'data/q1data.csv')
+download.file(q1datapath, destfile = 'data/q1data.csv', method='curl')
 q1data <- read.csv('data/q1data.csv')
 download.file(q1cbpath, 'data/q1codebook.pdf')
 
@@ -183,8 +183,43 @@ setdiff(q3data$CountryCode, q3ed$CountryCode)
 What is the average GDP ranking for the “High income: OECD” and “High
 income: nonOECD” group?
 
+``` r
+q3merged %>% select('Income Group','Ranking') %>% group_by(q3merged$'Income Group') %>% 
+    summarise(Mean = mean(Ranking, nr.rm = TRUE))
+```
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+    ## # A tibble: 6 x 2
+    ##   `q3merged$"Income Group"`  Mean
+    ##   <chr>                     <dbl>
+    ## 1 High income: nonOECD       91.9
+    ## 2 High income: OECD          33.0
+    ## 3 Low income                134. 
+    ## 4 Lower middle income       108. 
+    ## 5 Upper middle income        92.1
+    ## 6 <NA>                      131
+
 # Question 5
 
 Cut the GDP ranking into 5 separate quantile groups. Make a table versus
 Income.Group. How many countries are Lower middle income but among the
 38 nations with highest GDP?
+
+``` r
+breaks <- q3merged %>% select(Ranking) %>% quantile(probs = seq(0,1,0.2), na.rm=TRUE)
+q3merged$quantileGDP <- cut(q3merged$Ranking, breaks = breaks)
+q3merged <- q3merged %>% filter(q3merged$'Income Group' == 'Lower middle income')
+q3merged %>%
+    group_by(q3merged$'Income Group', q3merged$quantileGDP) %>% count()
+```
+
+    ## # A tibble: 5 x 3
+    ## # Groups:   q3merged$"Income Group", q3merged$quantileGDP [5]
+    ##   `q3merged$"Income Group"` `q3merged$quantileGDP`     n
+    ##   <chr>                     <fct>                  <int>
+    ## 1 Lower middle income       (1,38.8]                   5
+    ## 2 Lower middle income       (38.8,76.6]               13
+    ## 3 Lower middle income       (76.6,114]                12
+    ## 4 Lower middle income       (114,152]                  8
+    ## 5 Lower middle income       (152,190]                 16
