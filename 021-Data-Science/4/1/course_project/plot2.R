@@ -24,10 +24,10 @@ data <- read_delim('data/household_power_consumption.txt',
 data <- data %>% filter(Date == '2007-02-01' | Date == '2007-02-02') %>% 
     mutate(DateTime = parse_datetime(paste(Date,Time,sep = ' ')))
 
-## Plot 1
-png(filename = 'plot1.png')
-hist(data$Global_active_power, 
-     xlab='Global Active Power (kilowatts)', 
-     main = 'Global Active Power',
-     col = 'red')
+## Plot 2
+png(filename = 'plot2.png')
+plot(data$DateTime, data$Global_active_power,
+     ylab = 'Global Active Power (kilowatts)',
+     xlab = '',
+     type = 'l')
 dev.off()
