@@ -24,5 +24,5 @@ plot can be fully reproduced. You must also include the code that creates the PN
 ![Plot3](./plot3.png)
 ### Plot 4
 [plot4.R](./plot4.R)
-![Plot3](./plot3.png)
+![Plot4](./plot4.png)
 
