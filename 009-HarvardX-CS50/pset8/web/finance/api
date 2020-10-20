@@ -1,4 +1,2 @@
 pk_32a1b67469df4ee386a244d749b0945
 export API_KEY=pk_32a1b67469df4ee386a244d749b0945
-
-SELECT transactions.symbol, name, SUM(shares) FROM transactions JOIN symbols ON symbols.symbol = transactions.symbol WHERE user_id=1 GROUP BY transactions.symbol HAVING SUM(shares) > 0; 
