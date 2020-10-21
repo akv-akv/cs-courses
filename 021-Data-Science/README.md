@@ -9,7 +9,7 @@ This Specialization covers the concepts and tools you'll need throughout the ent
 | 2   |[R Programming](./2/README.md)|   
 | 3   |[Getting and Cleaning Data](./3/README.md)|
 | 4   |[Exploratory Data Analysis](./4/README.md)|
-|5    |[Reproducible Research] |
+|5    |[Reproducible Research](./5/README.md) |
 |6|[Statistical Inference]|
 |7|[Regression Models]|
 |8|[Practical Machine Learning]|
