@@ -1,0 +1,261 @@
+---
+title: "Impact from severe weather events on population and economics"
+author: "Kirill Avilenko"
+date: "11/02/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Synopsis
+Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern.
+
+This project involves exploring the U.S. National Oceanic and Atmospheric Administration’s (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+
+The research showed that absolute leader in health impact are tornadoes, followed by 
+thunderstorm wind, heat, flood and lightnings. However from the economics point of view
+tornadoes are only on the third place, loosing to floods and hurricanes. Also an interesting
+fact is that from the worst event types from economical point of view only two showed
+crop damage higher than property damage - it is drought and ice storm.
+
+## Data Processing
+
+### Initial setup
+As a basic settings fixed notation for numbers code 
+visibility are set. Additionally required packages for data processing and
+visualization are loaded. 
+```{r message = FALSE}
+# Load packages
+library(tidyverse)
+library(lubridate)
+library(stringdist)
+options(scipen=1) # Choose fixed notation for numbers visualization
+```
+
+### Download and read data
+The source data and corresponding documentation are loaded and stored in the 
+'data' directory. In order to speedup report generation process, download is skipped
+if 'data' directory already contains files.
+```{r}
+# Urls for data and documentation
+dataurl <- 'https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2'
+docurl <- 'https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf'
+faqurl <- 'https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf'
+
+# Check if data is already in data folder and download data if not
+if (!'storm.csv.bz2' %in% dir('./data/')) {
+    download.file(url=dataurl,destfile = 'data/storm.csv.bz2')}
+if (!'storm.pdf' %in% dir('./data/')) {
+    download.file(url=docurl,destfile = 'data/storm.pdf')}
+if (!'faq.pdf' %in% dir('./data/')) {
+    download.file(url=faqurl, destfile = 'data/faq.pdf')}
+rm('dataurl','docurl','faqurl') # Clear environment from urls
+```
+
+If environment doesn't contain rawData, then we read it from csv file.  
+```{r}
+if (!'rawData' %in% ls()) {
+    rawData <- read.csv('data/storm.csv.bz2')}
+```
+
+### Data overview
+
+Let's look at the data header.
+```{r}
+head(rawData,2)
+```
+For purposes of this analysis the following columns will be used:  
+- BGN_DATE - data of event
+- EVTYPE - type of event
+- FATALITIES - number of fatalities
+- INJURIES - number of injuries
+- PROPDMG - property damage
+- PROPDMGEXP - units for property damage
+- CROPDMG - crop damage
+- CROPDMGEXP - units for crop damage
+
+Further analysis will be performed on data subset with these variables only. Also 
+we'll work only on events that have at least one fatality or injury, or any kind 
+of damage is more than zero.
+
+```{r}
+data <- rawData %>% select(BGN_DATE, EVTYPE, FATALITIES, INJURIES, 
+                        PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP) %>%
+    filter(FATALITIES > 0 | INJURIES > 0 | PROPDMG >0 | CROPDMG > 0)
+summary(data)
+```
+
+### Data transformation
+
+For exploration of economic impact we need to calculate property and crop damage from corresponding columns. Also BGN_DATE column should be converted from chr to Date.
+```{r}
+data <- data %>% mutate(BGN_DATE = mdy_hms(BGN_DATE))
+```
+
+Let's look at all values in PROPDMGEXP
+```{r}
+table(data$PROPDMGEXP)
+```
+
+From the summary above we see that PROPDMGEXP field has three groups of values:
+1. Alphabetic multipliers
+2. Numeric multipliers
+3. Special characters
+
+Numeric and alpabetic multipliers will be handled as they state, special 
+characters will be considered as 0.  
+
+Let's look at CROPDMGEXP field:  
+```{r}
+table(data$CROPDMGEXP)
+```
+
+Situation here is the same, so we process crop damage data as property damage.
+
+```{r warning = FALSE}
+# Function for clean up PROPDMGEXP and CROPDMGEXP
+tidyDMGEXP <- function(value) {
+    return(case_when(
+        toupper(value) == 'H' ~ 10^2,
+        toupper(value) == 'K' ~ 10^3,
+        toupper(value) == 'M' ~ 10^6,
+        toupper(value) == 'B' ~ 10^9,
+        is.numeric(value) ~ 10^as.numeric(value),
+        TRUE ~ 1
+    ))
+}
+
+data <- data %>% 
+    mutate(cleanPROPDMGEXP = tidyDMGEXP(PROPDMGEXP),
+           cleanCROPDMGEXP = tidyDMGEXP(CROPDMGEXP),
+           propdmg = PROPDMG * cleanPROPDMGEXP,
+           cropdmg = CROPDMG * cleanCROPDMGEXP)
+```
+
+Number of unique event types in EVTYPE colunm
+```{r}
+length(unique(data$EVTYPE))
+```
+
+In order to eliminate the most common mismatch reasons EVTYPE column values should be:  
+
+1. Capitalized  
+2. Trimmed  
+3. Cleaned from punctuation  
+4. Removed abbreviations  
+5. Removed rows that contain 'summary'  
+
+```{r}
+data <- data %>% 
+    mutate(EVTYPE = gsub("[[:punct:]]", " ", toupper(str_squish(EVTYPE)))) %>%
+    mutate(EVTYPE = gsub("TSTM", "THUNDERSTORM", EVTYPE)) %>%
+    filter(!grepl('SUMMARY',EVTYPE))
+```
+
+```{r}
+data %>% group_by(EVTYPE) %>% summarise(count=n()) %>% arrange(desc(count))
+```
+
+Section 7 of the documentations says that there are 48 types of events, and after
+preliminary processing of the EVTYPE column there are 422 unique event types.   
+In order to clean up the list we use 
+```{r}
+events <- gsub("[[:punct:]]"," ",toupper(c("Astronomical Low Tide", "Avalanche",
+"Blizzard", "Coastal Flood", "Cold/Wind Chill",
+"Debris Flow","Dense Fog", "Dense Smoke", "Drought", "Dust Devil", "Dust Storm", 
+"Excessive Heat", "Extreme Cold/Wind Chill", "Flash Flood", "Flood", "Frost/Freeze", 
+"Funnel Cloud", "Freezing Fog", "Hail", "Heat", "Heavy Rain", "Heavy Snow", "High Surf", "High Wind", "Hurricane (Typhoon)", "Ice Storm", "Lake-Effect Snow", 
+"Lakeshore Flood", "Lightning", "Marine Hail", "Marine High Wind", 
+"Marine Strong Wind", "Marine Thunderstorm Wind", "Rip Current", "Seiche", 
+"Sleet", "Storm Surge/Tide", "Strong Wind", "Thunderstorm Wind", "Tornado", 
+"Tropical Depression", "Tropical Storm", "Tsunami", "Volcanic Ash", "Waterspout",
+"Wildfire", "Winter Storm","Winter Weather")))
+
+distmatrix<-stringdistmatrix(unique(data$EVTYPE),
+                            events, useNames=TRUE ,method = 'jw') %>%
+    data.frame() %>% rownames_to_column() 
+
+
+matchnames <- distmatrix %>% 
+    pivot_longer(!rowname) %>% 
+    group_by(rowname) %>% 
+    slice(which.min(value)) %>% 
+    arrange(desc(value)) %>% 
+    rename(EVTYPE = 'rowname')
+
+data <- data %>% left_join(matchnames,by='EVTYPE') %>% 
+    select(FATALITIES, INJURIES, propdmg, cropdmg, name) %>%
+    rename(evtype = 'name',
+           fat = 'FATALITIES',
+           inj = 'INJURIES') %>% as_tibble()
+```
+
+## Results
+
+### Public health impact
+
+Public health impact mostly depends on fatalities number so data is sorted by 
+fatalities number and then by injuries number. Below numbers for the TOP 10 most 
+harmful event types are given:
+```{r}
+# Health
+data %>% select(fat,inj,evtype) %>% group_by(evtype) %>% 
+    summarise(Fatalities=sum(fat),Injuries=sum(inj)) %>% 
+    arrange(desc(Fatalities)) %>% head(10)
+```
+
+Graphical representation of TOP-10 event types sorted by overall number of people
+affected by.
+
+```{r}
+healthdata <- data %>% select(fat,inj,evtype) %>% group_by(evtype) %>% 
+    summarise(Fatalities=sum(fat),Injuries=sum(inj)) %>% 
+    arrange(desc(Fatalities)) %>% head(10) %>%
+    pivot_longer(cols=-c('evtype'))
+ggplot(data=healthdata, aes(x=reorder(evtype,value),
+                            y=value,
+                            fill=name)) + 
+    geom_bar(stat='identity') + 
+    coord_flip() + facet_grid(~name,scale='free') +
+    xlab('Type of event') +
+    ylab('Health impact, people') +
+    labs(title='Health impact from various weather events') + 
+    theme(legend.position = "none")
+```
+
+From the diagram above we see that absolute leader in both fatalities and 
+injuries categories are Tornados.
+
+### Economics impact
+
+From the table data of 15 worst weather event types from the economics point of 
+view we find out that:  
+1. Most of cases property damages are much higher than crop damages, but there are
+two cases - drought and ice storm - where we see the opposite situation.
+```{r}
+data %>% select(propdmg,cropdmg,evtype) %>% group_by(evtype) %>% 
+    summarise(prop=sum(propdmg),crop=sum(cropdmg)) %>% arrange(desc(prop)) %>% head(15)
+```
+
+```{r}
+# Economics
+econdata <- data %>% select(propdmg,cropdmg,evtype) %>% group_by(evtype) %>% 
+    summarise(prop=sum(propdmg),crop=sum(cropdmg)) %>% arrange(desc(prop)) %>% head(15) %>%
+    pivot_longer(cols=-c('evtype'))
+ggplot(data=econdata, 
+       aes(x=reorder(evtype,value), y=value, fill=name)) + 
+    geom_bar(stat='identity') + 
+    coord_flip()
+```
+
+## Auxilaries
+
+### Structure of the raw dataset
+
+```{r}
+str(rawData)
+```
+
+
