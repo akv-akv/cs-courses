@@ -2,6 +2,8 @@
 
 Excersises from [SQLZoo.net](https://sqlzoo.net/)
 
+#### Tutorials: Learn SQL in stages
+
 1. [4 SELECT within SELECT - In which we form queries using other queries.](4.sql)
 2. [5 SUM and COUNT - In which we apply aggregate functions. more the same](5.sql)
 3. [6 JOIN - In which we join two tables; game and goals. previously music tutorial](6.sql)
