@@ -15,4 +15,5 @@ This repository is aimed to store progress of learning CS.
 |9| [Stanford - Databases: Relational databases and SQL](./017-Databases-Relational-DB-and-SQL)|
 |10| [Stanford - Machine learning](./020-Machine-Learning)|
 |11| [John Hopkins University - Data Science Specialization](./021-Data-Science)|
+|12| [SQLZoo - Exercises](./023-SQLZoo)|
 
