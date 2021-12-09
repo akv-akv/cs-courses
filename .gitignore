@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.rkt~
+*.dep
+*.zo
+024-Java/
+.DS_Store
