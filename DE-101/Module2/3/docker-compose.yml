@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:13
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./initial_data:/var/lib/postgresql/csv
+      - ./queries:/queries
+          # copy the sql script to create tables
+      - ./initial_scripts:/docker-entrypoint-initdb.d
+
+    environment:
+      POSTGRES_PASSWORD: 123
