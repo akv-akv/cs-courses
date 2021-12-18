@@ -1,0 +1,81 @@
+@startuml
+title:SuperStore logical data model
+
+entity fact_orders {
+    order_id <<PK>>
+    --
+    order_date_id <<FK>>
+    ship_date_id <<FK>>
+    ship_mode_id <<FK>>
+    customer_id <<FK>>
+    address_id <<FK>>
+    sales 
+    quantity
+    discount
+    profit    
+}
+
+entity dim_regions {
+    id <<PK>>
+    --
+    name
+    manager
+}
+
+entity dim_products {
+    id <<PK>>
+    --
+    name
+    category
+    subcategory
+}
+
+entity dim_ship_modes {
+    id <<PK>>
+    --
+    name
+}
+
+entity dim_customers {
+    id <<PK>>
+    --
+    name
+    segment
+}
+
+entity dim_addresses {
+    id <<PK>>
+    --
+    postal_code
+    country
+    city
+    state
+    region_id <<FK>>
+}
+
+entity dim_dates {
+    id <<PK>>
+    --
+    date
+    year
+    quarter
+    month_name
+    month_number
+    week
+    weekday_name
+    weekday_number
+    isweekend
+    isholiday
+}
+
+
+dim_addresses}|-up-||dim_regions
+fact_orders}|--||dim_customers
+fact_orders}|-right-||dim_addresses
+fact_orders}|-up-||dim_products
+fact_orders}|-left-||dim_dates
+fact_orders}|-left-||dim_dates
+fact_orders}|--||dim_ship_modes
+
+
+@enduml
