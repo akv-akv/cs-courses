@@ -1,0 +1,77 @@
+@startuml
+title:SuperStore physical data model
+
+entity fact_orders {
+    pk_id: integer <<PK>>
+    --
+    pk_bk_id: varchar(20)
+    fk_order_date_id: integer <<FK>>
+    fk_ship_date_id: integer <<FK>>
+    fk_ship_mode_id: integer <<FK>>
+    fk_customer_id: integer <<FK>>
+    fk_address_id: integer <<FK>>
+    sales: numeric(9,4)
+    quantity: smallint
+    discount: numeric(4,2)
+    profit: numeric(9,4)   
+    isreturned: smallint
+}
+
+
+entity dim_products {
+    pk_id: integer <<PK>>
+    --
+    pk_bk_id: varchar(50)
+    name: varchar(255)
+    category: varchar(50)
+    subcategory: varchar(50)
+}
+
+entity dim_ship_modes {
+    pk_id: integer <<PK>>
+    --
+    name: varchar(50)
+}
+
+entity dim_customers {
+    pk_id: integer <<PK>>
+    --
+    pk_bk_id: varchar(50)
+    name:  varchar(150)
+    segment: varchar(50)
+}
+
+entity dim_addresses {
+    pk_id: integer <<PK>>
+    --
+    postal_code: varchar(10)
+    country: varchar(50)
+    city: varchar(50)
+    state: varchar(50)
+    region: varchar(50)
+    manager: varchar(50)
+}
+
+entity dim_dates {
+    pk_id: integer <<PK>>
+    --
+    date: date
+    year: integer
+    quarter: integer
+    month_name:  varchar(20)
+    month_number: integer
+    week: integer 
+    weekday_name:  varchar(20)
+    weekday_number: integer
+    isweekend: smallint
+}
+
+fact_orders}|--||dim_customers
+fact_orders}|-right-||dim_addresses
+fact_orders}|-up-||dim_products
+fact_orders}|-left-||dim_dates
+fact_orders}|-left-||dim_dates
+fact_orders}|--||dim_ship_modes
+
+
+@enduml

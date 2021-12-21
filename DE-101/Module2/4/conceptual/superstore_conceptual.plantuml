@@ -1,6 +1,5 @@
 @startuml
 title: SuperStore conceptual data model
-dim_addresses }|-up-|| dim_regions
 fact_orders }|--|| dim_customers
 fact_orders }|-right-|| dim_addresses
 fact_orders }|-up-|| dim_products

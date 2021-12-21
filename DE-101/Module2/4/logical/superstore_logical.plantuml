@@ -2,59 +2,58 @@
 title:SuperStore logical data model
 
 entity fact_orders {
-    order_id <<PK>>
+    pk_id <<PK>>
     --
-    order_date_id <<FK>>
-    ship_date_id <<FK>>
-    ship_mode_id <<FK>>
-    customer_id <<FK>>
-    address_id <<FK>>
+    pk_bk_id
+    fk_order_date_id <<FK>>
+    fk_ship_date_id <<FK>>
+    fk_ship_mode_id <<FK>>
+    fk_customer_id <<FK>>
+    fk_address_id <<FK>>
     sales 
     quantity
     discount
-    profit    
+    profit  
+    isreturned  
 }
 
-entity dim_regions {
-    id <<PK>>
-    --
-    name
-    manager
-}
 
 entity dim_products {
-    id <<PK>>
+    pk_id <<PK>>
     --
+    pk_bk_id
     name
     category
     subcategory
 }
 
 entity dim_ship_modes {
-    id <<PK>>
+    pk_id <<PK>>
     --
     name
 }
 
 entity dim_customers {
-    id <<PK>>
+    pk_id <<PK>>
     --
+    pk_bk_id
     name
     segment
 }
 
 entity dim_addresses {
-    id <<PK>>
+    pk_id <<PK>>
     --
     postal_code
     country
     city
     state
-    region_id <<FK>>
+    region
+    manager
 }
 
 entity dim_dates {
-    id <<PK>>
+    pk_id <<PK>>
     --
     date
     year
@@ -65,11 +64,8 @@ entity dim_dates {
     weekday_name
     weekday_number
     isweekend
-    isholiday
 }
 
-
-dim_addresses}|-up-||dim_regions
 fact_orders}|--||dim_customers
 fact_orders}|-right-||dim_addresses
 fact_orders}|-up-||dim_products
