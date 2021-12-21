@@ -41,3 +41,7 @@ COPY stage.people
 FROM '/var/lib/postgresql/csv/people.csv' DELIMITER ',' CSV HEADER;
 COPY stage.returns
 FROM '/var/lib/postgresql/csv/returns.csv' DELIMITER ',' CSV HEADER;
+UPDATE stage.orders
+SET postal_code = '05401'
+WHERE city = 'Burlington'
+  AND state = 'Vermont';
