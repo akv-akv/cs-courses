@@ -50,4 +50,4 @@ Design Dimensional Model for initial [Superstore Excel File](./3/initial_data/Sa
 
 Google Data Studio [SuperStore - Dashboard](https://datastudio.google.com/reporting/5add7a09-8a66-4b58-9939-13fbe9403d28) connected to PostgreSQL database on AWS Lightsail instance.
 
-![](../Module6/dashboard.png)
+![](./6/dashboard.png)
