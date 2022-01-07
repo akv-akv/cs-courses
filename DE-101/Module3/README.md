@@ -28,13 +28,13 @@ The dashboard should andser the question in which neighbourhood is it worth rent
 
 The dataset consists of the following files:
 
-listings.csv — detailed info about each real estate object
-listings_summary.csv — summarised info about each real estate object
-calendar.csv — real estate object availability schedule
-neighbourhoods.csv — district list
-neighbourhoods.geojson — district spatial data
-reviews.csv — object reviews
-reviews_summary.csv — object reviews summary
+- listings.csv — detailed info about each real estate object
+- listings_summary.csv — summarised info about each real estate object
+- calendar.csv — real estate object availability schedule
+- neighbourhoods.csv — district list
+- neighbourhoods.geojson — district spatial data
+- reviews.csv — object reviews
+- reviews_summary.csv — object reviews summary
 
 In order to solve the problem decided to use data from reviews.csv, reviews_summary.csv and neighbourhoods.geojson
 
