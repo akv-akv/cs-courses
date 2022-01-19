@@ -16,4 +16,4 @@ This repository is aimed to store progress of learning CS.
 |10| [Stanford - Machine learning](./020-Machine-Learning)|
 |11| [John Hopkins University - Data Science Specialization](./021-Data-Science)|
 |12| [SQLZoo - Exercises](./023-SQLZoo)|
-
+|13| [Data Learn DE-101](./DE-101)|
