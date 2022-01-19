@@ -1,4 +1,4 @@
-# Homework 2
+# DE-101 Module 2 Homework
 
 Homework task available in [DE-101 course repository](https://github.com/Data-Learn/data-engineering/blob/master/DE-101%20Modules/Module02/DE%20-%20101%20Module02.md)
 
