@@ -430,20 +430,20 @@
     <created_date>2020/11/29 22:49:32.482</created_date>
     <modified_user>-</modified_user>
     <modified_date>2020/11/29 22:49:32.482</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>Postgres</name>
+    <name>Postgres DE101M04L04</name>
     <server>localhost</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>postgres</database>
-    <port>5433</port>
-    <username>postgres</username>
-    <password>Encrypted 2be98afc86aa7f2e4bb16bd64d980aac9</password>
+    <database>de101m04l04</database>
+    <port>5432</port>
+    <username>de</username>
+    <password>Encrypted </password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -462,7 +462,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>5433</attribute>
+        <attribute>5432</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -494,7 +494,7 @@
     </hop>
     <hop>
       <from>People input</from>
-      <to>stg.peoples</to>
+      <to>stg.people</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -530,7 +530,12 @@
     <accept_field/>
     <accept_stepname/>
     <file>
-      <name>/Users/dmitryanoshin/Documents/GitHub/data-engineering/DE-101/Module-01/Lab/Sample - Superstore.xls</name>
+      <name>${excel_filepath}/Sample - Superstore.xls</name>
+      <filemask/>
+      <exclude_filemask/>
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+      <name/>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -539,12 +544,12 @@
     <fields>
       <field>
         <name>Row ID</name>
-        <type>Number</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
-        <format/>
+        <format>#</format>
         <currency/>
         <decimal/>
         <group/>
@@ -568,7 +573,7 @@
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
-        <format/>
+        <format>yyyy-MM-dd</format>
         <currency/>
         <decimal/>
         <group/>
@@ -580,7 +585,7 @@
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
-        <format/>
+        <format>yyyy-MM-dd</format>
         <currency/>
         <decimal/>
         <group/>
@@ -671,7 +676,7 @@
       </field>
       <field>
         <name>Postal Code</name>
-        <type>Number</type>
+        <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -755,12 +760,12 @@
       </field>
       <field>
         <name>Quantity</name>
-        <type>Number</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
-        <format/>
+        <format>#</format>
         <currency/>
         <decimal/>
         <group/>
@@ -825,240 +830,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>stg.orders</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Postgres</connection>
-    <schema>stg</schema>
-    <table>orders</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>row_id</column_name>
-        <stream_name>Row ID</stream_name>
-      </field>
-      <field>
-        <column_name>order_id</column_name>
-        <stream_name>Order ID</stream_name>
-      </field>
-      <field>
-        <column_name>order_date</column_name>
-        <stream_name>Order Date</stream_name>
-      </field>
-      <field>
-        <column_name>ship_date</column_name>
-        <stream_name>Ship Date</stream_name>
-      </field>
-      <field>
-        <column_name>ship_mode</column_name>
-        <stream_name>Ship Mode</stream_name>
-      </field>
-      <field>
-        <column_name>customer_id</column_name>
-        <stream_name>Customer ID</stream_name>
-      </field>
-      <field>
-        <column_name>customer_name</column_name>
-        <stream_name>Customer Name</stream_name>
-      </field>
-      <field>
-        <column_name>segment</column_name>
-        <stream_name>Segment</stream_name>
-      </field>
-      <field>
-        <column_name>country</column_name>
-        <stream_name>Country</stream_name>
-      </field>
-      <field>
-        <column_name>city</column_name>
-        <stream_name>City</stream_name>
-      </field>
-      <field>
-        <column_name>state</column_name>
-        <stream_name>State</stream_name>
-      </field>
-      <field>
-        <column_name>postal_code</column_name>
-        <stream_name>Postal Code</stream_name>
-      </field>
-      <field>
-        <column_name>Region</column_name>
-        <stream_name>Region</stream_name>
-      </field>
-      <field>
-        <column_name>product_id</column_name>
-        <stream_name>Product ID</stream_name>
-      </field>
-      <field>
-        <column_name>Category</column_name>
-        <stream_name>Category</stream_name>
-      </field>
-      <field>
-        <column_name>subcategory</column_name>
-        <stream_name>Sub-Category</stream_name>
-      </field>
-      <field>
-        <column_name>product_name</column_name>
-        <stream_name>Product Name</stream_name>
-      </field>
-      <field>
-        <column_name>sales</column_name>
-        <stream_name>Sales</stream_name>
-      </field>
-      <field>
-        <column_name>quantity</column_name>
-        <stream_name>Quantity</stream_name>
-      </field>
-      <field>
-        <column_name>discount</column_name>
-        <stream_name>Discount</stream_name>
-      </field>
-      <field>
-        <column_name>profit</column_name>
-        <stream_name>Profit</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>stg.peoples</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Postgres</connection>
-    <schema>stg</schema>
-    <table>peoples</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>person</column_name>
-        <stream_name>Person</stream_name>
-      </field>
-      <field>
-        <column_name>region</column_name>
-        <stream_name>Region</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>stg.returns</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Postgres</connection>
-    <schema>stg</schema>
-    <table>returns</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>Returned</column_name>
-        <stream_name>Returned</stream_name>
-      </field>
-      <field>
-        <column_name>Order ID</column_name>
-        <stream_name>Order ID</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>400</yloc>
+      <xloc>144</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1089,7 +862,7 @@
     <accept_field/>
     <accept_stepname/>
     <file>
-      <name>/Users/dmitryanoshin/Documents/GitHub/data-engineering/DE-101/Module-01/Lab/Sample - Superstore.xls</name>
+      <name>${excel_filepath}/Sample - Superstore.xls</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -1156,8 +929,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>320</yloc>
+      <xloc>144</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1188,7 +961,7 @@
     <accept_field/>
     <accept_stepname/>
     <file>
-      <name>/Users/dmitryanoshin/Documents/GitHub/data-engineering/DE-101/Module-01/Lab/Sample - Superstore.xls</name>
+      <name>${excel_filepath}/Sample - Superstore.xls</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -1255,8 +1028,240 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>400</yloc>
+      <xloc>144</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>stg.orders</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Postgres DE101M04L04</connection>
+    <schema>stg</schema>
+    <table>orders</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>row_id</column_name>
+        <stream_name>Row ID</stream_name>
+      </field>
+      <field>
+        <column_name>order_id</column_name>
+        <stream_name>Order ID</stream_name>
+      </field>
+      <field>
+        <column_name>order_date</column_name>
+        <stream_name>Order Date</stream_name>
+      </field>
+      <field>
+        <column_name>ship_date</column_name>
+        <stream_name>Ship Date</stream_name>
+      </field>
+      <field>
+        <column_name>ship_mode</column_name>
+        <stream_name>Ship Mode</stream_name>
+      </field>
+      <field>
+        <column_name>customer_id</column_name>
+        <stream_name>Customer ID</stream_name>
+      </field>
+      <field>
+        <column_name>customer_name</column_name>
+        <stream_name>Customer Name</stream_name>
+      </field>
+      <field>
+        <column_name>segment</column_name>
+        <stream_name>Segment</stream_name>
+      </field>
+      <field>
+        <column_name>country</column_name>
+        <stream_name>Country</stream_name>
+      </field>
+      <field>
+        <column_name>city</column_name>
+        <stream_name>City</stream_name>
+      </field>
+      <field>
+        <column_name>geo_state</column_name>
+        <stream_name>State</stream_name>
+      </field>
+      <field>
+        <column_name>postal_code</column_name>
+        <stream_name>Postal Code</stream_name>
+      </field>
+      <field>
+        <column_name>region</column_name>
+        <stream_name>Region</stream_name>
+      </field>
+      <field>
+        <column_name>product_id</column_name>
+        <stream_name>Product ID</stream_name>
+      </field>
+      <field>
+        <column_name>category</column_name>
+        <stream_name>Category</stream_name>
+      </field>
+      <field>
+        <column_name>subcategory</column_name>
+        <stream_name>Sub-Category</stream_name>
+      </field>
+      <field>
+        <column_name>product_name</column_name>
+        <stream_name>Product Name</stream_name>
+      </field>
+      <field>
+        <column_name>sales</column_name>
+        <stream_name>Sales</stream_name>
+      </field>
+      <field>
+        <column_name>quantity</column_name>
+        <stream_name>Quantity</stream_name>
+      </field>
+      <field>
+        <column_name>discount</column_name>
+        <stream_name>Discount</stream_name>
+      </field>
+      <field>
+        <column_name>profit</column_name>
+        <stream_name>Profit</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>stg.people</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Postgres DE101M04L04</connection>
+    <schema>stg</schema>
+    <table>people</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>person</column_name>
+        <stream_name>Person</stream_name>
+      </field>
+      <field>
+        <column_name>region</column_name>
+        <stream_name>Region</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>stg.returns</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>Postgres DE101M04L04</connection>
+    <schema>stg</schema>
+    <table>returns</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>returned</column_name>
+        <stream_name>Returned</stream_name>
+      </field>
+      <field>
+        <column_name>order_id</column_name>
+        <stream_name>Order ID</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
