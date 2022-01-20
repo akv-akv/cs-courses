@@ -9,15 +9,19 @@
 
 ### Solution:
 [Stage](./4/practice/stage.ktr)
+
 ![](./4/practice/images/stage.png)
 
 [Dim](./4/practice/dim.ktr)
+
 ![](./4/practice/images/dim.png)
 
 [Fact](./4/practice/fact.ktr)
+
 ![](./4/practice/images/fact.png)
 
 [Job](./4/practice/job.kjb)
+
 ![](./4/practice/images/job.png)
 
 ## 4.5 34 ETL Subsystems
