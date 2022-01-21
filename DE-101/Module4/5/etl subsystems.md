@@ -19,16 +19,31 @@ The purpose of this research is to find functions in Pentaho DI that allow to im
 
 ### Extract System (subsystem 3)
 
-Pentaho DI provides plenty of tools that help user to connect to various sources and get data out of them. 
+Pentaho DI provides plenty of tools that help user to connect to various all popular data sources including Excel, JSON, Zipped files, TXT files, many flavours of databases and even cloud storage. Here are some of them:
 
+- Text file input
+- JSON input
+- Microsoft Excel input
+- Table input
+- MongoDB input
+- Parquet input
 
 ## Cleansing and conforming data
 
 ### Data Cleansing System (subsystem 4)
 
 ### Error Event Tracking (subsystem 5)
+
+<img src="./images/5_errors.png" width="500">
+
 ### Audit Dimension Creation (subsystem 6) 
+
 ### Deduplication (subsystem 7)
+
+The purpose of this system is to eliminate redundant rows from the data. 
+    
+<img src="./images/7_deduplication.png" width="800">
+
 ### Data Conformance (subsystem 8) 
 
 
@@ -37,6 +52,8 @@ Pentaho DI provides plenty of tools that help user to connect to various sources
 ### Slowly Changing Dimension (SCD) Manager (subsystem 9)
 
 ### Surrogate Key Generator (subsystem 10)
+
+<img src="./images/10_surrogate_key_gen.png" width="600">
 
 ### Hierarchy Manager (subsystem 11)
 
@@ -70,6 +87,9 @@ Pentaho DI provides plenty of tools that help user to connect to various sources
 ### Version Migration (subsystem 26) 
 ### Workflow Monitor (subsystem 27) 
 ### Sorting (subsystem 28)
+
+<img src="./images/28_sorting.png" width="800">
+
 ### Lineage and Dependency (subsystem 29) 
 ### Problem Escalation (subsystem 30) 
 ### Paralleling and Pipelining (subsystem 31) 
