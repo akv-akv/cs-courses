@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: hh
+    description: Data from HeadHunter API
+    schema: stg
+    tables:
+      - name: hh_vacancies
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique  
+          - name: published_at
+            tests:
+              - not_null

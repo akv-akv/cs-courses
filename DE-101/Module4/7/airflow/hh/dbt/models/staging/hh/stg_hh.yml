@@ -1,0 +1,8 @@
+version: 1
+
+models:
+  - name: stg_hh__vacancies
+    columns:
+      - name: customer_id
+        tests:
+          - not_null

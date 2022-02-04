@@ -11,11 +11,6 @@ The purpose of this research is to find functions in Pentaho DI that allow to im
 
 ## Extracting: Getting data into the data warehouse
 
-### Data Profiling (subsystem 1) 
-
-
-### Change Data Capture (subsystem 2)
-
 
 ### Extract System (subsystem 3)
 
@@ -34,9 +29,9 @@ Pentaho DI provides plenty of tools that help user to connect to various all pop
 
 ### Error Event Tracking (subsystem 5)
 
-<img src="./images/5_errors.png" width="500">
+There is out of the box logging and error handling functionality.
 
-### Audit Dimension Creation (subsystem 6) 
+<img src="./images/5_errors.png" width="500">
 
 ### Deduplication (subsystem 7)
 
@@ -44,24 +39,26 @@ The purpose of this system is to eliminate redundant rows from the data.
     
 <img src="./images/7_deduplication.png" width="800">
 
-### Data Conformance (subsystem 8) 
-
 
 ## Delivering: Prepare for presentation
 
 ### Slowly Changing Dimension (SCD) Manager (subsystem 9)
 
+SCD of various types could be implemented with Dimension lookup/update tool.
+
+<img src="./images/9_dim_lookup.png" width="600">
+
 ### Surrogate Key Generator (subsystem 10)
 
+Surrogate keys could be generated using “Dimension lookup / update” and “Combination lookup / update”
+
 <img src="./images/10_surrogate_key_gen.png" width="600">
-
-### Hierarchy Manager (subsystem 11)
-
-### Special Dimensions Manager (subsystem 12)
 
 ### Fact Table Builders (subsystem 13)
 
 ### Surrogate Key Pipeline (subsystem 14)
+
+<img src="./images/14_surrogate_key_pipeline.png" width="800">
 
 ### Multi-Valued Bridge Table Builder (subsystem 15)
 
