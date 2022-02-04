@@ -7,3 +7,21 @@
 *.zo
 024-Java/
 .DS_Store
+.cmp
+.out
+missing_semester/
+Learning Python/
+DE-101/Module2/3/venv/
+DE-101/Module4/books
+022-LinkedIn-Data-Analytics/
+DE-101/Module4/5/PentahoDIBeginnersGuide/
+007-UniversityOfWashington-Programming-Lang-B/week1/section5sum.pdf
+007-UniversityOfWashington-Programming-Lang-B/week2/hw5/Untitled.rkt
+009-HarvardX-CS50/final/mysite/gallery/__pycache__/
+009-HarvardX-CS50/final/mysite/mysite/__pycache__/
+009-HarvardX-CS50/pset4/address
+009-HarvardX-CS50/pset4/address.c
+021-Data-Science/2/1/specdata.zip
+DE-101/Module4/7/airflow/hh/dags/__pycache__/
+DE-101/Module4/7/airflow/hh/venv/
+DE-101/Module4/7/airflow/hh/dags/hh/__pycache__/
