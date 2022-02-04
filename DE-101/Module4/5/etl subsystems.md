@@ -60,36 +60,8 @@ Surrogate keys could be generated using “Dimension lookup / update” and “C
 
 <img src="./images/14_surrogate_key_pipeline.png" width="800">
 
-### Multi-Valued Bridge Table Builder (subsystem 15)
-
-### Late Arriving Data Handler (subsystem 16)
-
-### Dimension Manager (subsystem 17)
-
-### Fact Table Provider (subsystem 18)
-
-### Aggregate Builder (subsystem 19)
-
-### OLAP Cube Builder (subsystem 20)
-
-### Data Propagation Manager (subsystem 21)
-
-
 ## Managing the ETL environment
 
-### Job Scheduler (subsystem 22) 
-### Backup System (subsystem 23) 
-### Recovery and Restart (subsystem 24) 
-### Version Control (subsystem 25)
-### Version Migration (subsystem 26) 
-### Workflow Monitor (subsystem 27) 
 ### Sorting (subsystem 28)
 
 <img src="./images/28_sorting.png" width="800">
-
-### Lineage and Dependency (subsystem 29) 
-### Problem Escalation (subsystem 30) 
-### Paralleling and Pipelining (subsystem 31) 
-### Security (subsystem 32) 
-### Compliance Manager (subsystem 33)
-### Metadata Repository (subsystem 34)
