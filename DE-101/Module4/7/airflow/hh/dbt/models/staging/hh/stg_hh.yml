@@ -2,7 +2,23 @@ version: 2
 
 models:
   - name: stg_hh__vacancies
+    description: This table contains vacancies list from HeadHunter API for the "data engineer" request
     columns:
-      - name: customer_id
+      - name: vacancy_pk_bk_id
+        description: This is a business unique indenifier for the vacancy
         tests:
           - not_null
+      - name: published_at
+        description: This is a vacancy publication date
+        tests:
+          - not_null
+      - name: key_skills
+        description: This is an array that contains key skills requirements
+          in json format
+      - name: schedule_name
+        description: This is a schedule requirement of a vacancy
+      - name: area_name
+        description: This is a area in which vacancy is published
+      - name: employer_name
+        description: This is a employer, which published the vacancy
+      

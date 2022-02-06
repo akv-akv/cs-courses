@@ -28,12 +28,18 @@ with stage AS
         select *
             from {{ ref('dim_currencies')}}
     )
-select    vacancy_pk_id                             as vacancy_pk_id
+, vacancies_with_skills as
+    (
+        select *
+            from {{ ref('vacancies_with_skills')}}
+    )
+select    v.vacancy_pk_id                             as vacancy_pk_id
         , vacancy_pk_bk_id                          as vacancy_pk_bk_id
         , cast(published_at as date)                as published_date
         , to_char(published_at::time, 'hh24:mi')    as published_time
         , vacancy_name                              as vacancy_name
         , vacancy_description                       as vacancy_description
+        , coalesce(skill_name_list,'N/A')           as skill_name_list
         , coalesce(sch.pk_id,0)                     as fk_schedule_id
         , coalesce(ex.pk_id,0)                      as fk_experience_id
         , coalesce(a.pk_id,0)                       as fk_area_id
@@ -70,4 +76,5 @@ select    vacancy_pk_id                             as vacancy_pk_id
     left join dim_currencies cur
         on v.salary_currency = cur.currency_charcode
         and v.published_at = cur.date_at
-
+    left join vacancies_with_skills vs
+        on vs.vacancy_pk_id = v.vacancy_pk_id
