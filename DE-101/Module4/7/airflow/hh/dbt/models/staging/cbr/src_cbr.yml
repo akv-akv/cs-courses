@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: cbr
+    description: Data from https://www.cbr.ru API
+    schema: stg
+    tables:
+      - name: cbr_currencies
+        columns:
+          - name: charcode
+            tests:
+              - not_null
+          - name: nominal
+            tests:
+              - not_null
+          - name: date
+            tests:
+              - not_null
+          - name: value
+            tests:
+              - not_null

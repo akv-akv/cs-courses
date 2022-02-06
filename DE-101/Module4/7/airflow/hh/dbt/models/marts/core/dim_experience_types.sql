@@ -2,7 +2,7 @@ with cte AS
      (
          select distinct
                  experience_name
-             from "de101m04cp"."dm"."stg_hh__vacancies"
+             from {{ ref('stg_hh__vacancies') }}
      )
  select 0 as pk_id, 'N/A' as experience_name
  UNION

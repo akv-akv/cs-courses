@@ -4,7 +4,7 @@ with source as (
 ),
 renamed as (
     select  
-            id                      as vacancy_id
+            id                      as vacancy_pk_bk_id
             , name                  as vacancy_name
             , published_at          as published_at
             , key_skills            as key_skills

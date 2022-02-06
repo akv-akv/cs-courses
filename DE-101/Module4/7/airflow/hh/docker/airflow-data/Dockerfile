@@ -5,5 +5,8 @@ USER root
 RUN mkdir -p /data && chown airflow /data
 
 USER airflow
-RUN pip install dbt-postgres
-RUN pip uninstall  --yes azure-storage && pip install -U azure-storage-blob apache-airflow-providers-microsoft-azure==1.1.0
+RUN pip install dbt-postgres lxml xmltodict
+RUN pip uninstall  --yes azure-storage && \
+    pip install -U azure-storage-blob \
+    apache-airflow-providers-microsoft-azure==1.1.0
+
