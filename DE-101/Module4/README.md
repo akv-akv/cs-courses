@@ -33,8 +33,35 @@
 ### Part 2 - Excercises from Pentaho Data Integration Beginner's Guide - Second Edition
 
 
-
 ## 4.7 Fancy ETL
 
-### Airflow
+### Airflow + dbt pet project
+
+Project architecture
+
+![](./7/airflow/hh/images/etl_architecture.drawio.png)
+
+Airflow techinques used:
+
+- Developed a hook and an operator for the HeadHunter API to fetch vacancies effectively
+- Currency rates from the Central Bank API are fetched with simple BashOperator
+- Upload to data warehous uses postgres hook, sqlalchemy and pandas(with some other packages) for data transformation
+
+
+DBT:
+
+Lineage Graph
+
+![](./7/airflow/hh/images/dbt-lineage.png)
+
+Data marts schema
+
+
+
+
+
+
+
+
+
 
