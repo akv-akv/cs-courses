@@ -6,6 +6,8 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 import sqlalchemy
+import xmltodict
+from lxml import etree
 
 from airflow import DAG
 
@@ -13,17 +15,21 @@ from airflow.utils.dates import days_ago
 from airflow.hooks.base_hook import BaseHook
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.providers.docker.operators.docker import DockerOperator
+
+
 from hh.operators import HeadHunterRuFetchVacanciesOperator
 
 
 dag = DAG(
-    dag_id="03_operator",
+    dag_id="hh_dwh",
     description="Fetches vacancies from the HeadHunter API using a custom operator.",
     start_date=days_ago(29),
-    #end_date=days_ago(27),
     schedule_interval="@daily",
     )
 vacancies_path = "/data/hh_vacancies"
+currency_rates_path = "/data/cbr_currencies"
 
 start = DummyOperator(task_id="start")
 
@@ -35,6 +41,45 @@ fetch_vacancies = HeadHunterRuFetchVacanciesOperator(
     output_path=vacancies_path+"/{{ds}}/",
     dag=dag
 )
+
+fetch_currencies = BashOperator(
+    task_id="fetch_currencies",
+    bash_command=(
+        f"mkdir -p /data/cbr_currency_rates && "
+        "curl -o /data/cbr_currency_rates/{{execution_date.strftime('%Y%m%d')}}.xml -L "
+        "'http://www.cbr.ru/scripts/XML_daily_eng.asp?date_req={{execution_date.strftime('%d/%m/%Y')}}'"
+    ),
+    dag=dag,
+)
+
+def _upload_currency_rates_to_stage(**context):
+    ds = context["ds_nodash"]
+
+    with open(f"/data/cbr_currency_rates/{ds}.xml",'r') as f:
+        my_xml = f.read()
+    
+    my_dict = xmltodict.parse(my_xml)['ValCurs']['Valute']
+
+    currency_rates = pd.DataFrame(my_dict)
+    currency_rates['date'] = f"{ds}"
+    currency_rates = currency_rates.rename(columns={'@ID':'id'})
+    currency_rates.columns= currency_rates.columns.str.lower()
+    currency_rates['value'] = currency_rates['value'].str.replace(',','.')
+    engine = create_engine(BaseHook.get_connection('de101m04cp').get_uri())
+        
+    with engine.begin() as conn:
+        
+        query = text("""DELETE FROM stg.cbr_currencies 
+                        WHERE date = :date;""")
+        conn.execute(query, {'date':f"'{ds}'"})
+        currency_rates.to_sql(schema='stg',
+                                name='cbr_currencies', 
+                                con=conn, 
+                                index=False, 
+                                if_exists="append",
+                                )
+
+    
 
 def _upload_vacancies_to_stage(**context):
     ds = context["ds"]
@@ -62,25 +107,6 @@ def _upload_vacancies_to_stage(**context):
             'has_test',
             'type_name'
         }
-
-        # dtypes = {
-        #     'id': sqlalchemy.types.INTEGER,
-        #     'name': sqlalchemy.types.VARCHAR(length=100),
-        #     'published_at': sqlalchemy.types.TIMESTAMP,
-        #     'key_skills': sqlalchemy.types.TEXT,
-        #     'description': sqlalchemy.types.TEXT,
-        #     'schedule_name': sqlalchemy.types.VARCHAR(length=100),
-        #     'experience_name': sqlalchemy.types.VARCHAR(length=100),
-        #     'area_name': sqlalchemy.types.VARCHAR(length=100),
-        #     'employer_name': sqlalchemy.types.VARCHAR(length=100),
-        #     'url': sqlalchemy.types.VARCHAR(length=500),
-        #     'salary_to': sqlalchemy.types.INTEGER,
-        #     'salary_from': sqlalchemy.types.INTEGER,
-        #     'salary_currency': sqlalchemy.types.VARCHAR(length=10),
-        #     'salary_gross': sqlalchemy.types.BOOLEAN,
-        #     'has_test': sqlalchemy.types.BOOLEAN,
-        #     'type_name': sqlalchemy.types.VARCHAR(length=100)
-        # }
         
         vacancies = pd.DataFrame(columns=list(expected_columns))
         for json_file in json_files:
@@ -122,5 +148,13 @@ upload_vacancies_to_stage = PythonOperator(
     dag=dag
 )
 
-start >> [fetch_vacancies]
+upload_currency_rates_to_stage = PythonOperator(
+    task_id="upload_currency_rates_to_stage",
+    python_callable=_upload_currency_rates_to_stage,
+    dag=dag
+)
+
+
+start >> [fetch_vacancies, fetch_currencies]
 fetch_vacancies >> upload_vacancies_to_stage
+fetch_currencies >> upload_currency_rates_to_stage
