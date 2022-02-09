@@ -34,7 +34,7 @@ class HeadHunterRuFetchVacanciesOperator(BaseOperator):
                 output_path,
                 date_from="{{ds}}",
                 date_to="{{ds}}",
-                text="data engineer",
+                text="NAME:(%22data%20engineer%22%20OR%20%22etl%22%20OR%20%22dwh%22)",
                 batch_size=100,
                 **kwargs) -> None:
         super(HeadHunterRuFetchVacanciesOperator, self).__init__(**kwargs)
