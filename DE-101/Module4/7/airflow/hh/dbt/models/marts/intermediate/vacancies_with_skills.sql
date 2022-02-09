@@ -12,12 +12,12 @@ with dim_skills AS
 , dim_skills_with_vacancy_id AS
     (   
         select DISTINCT s.fk_vacancy_id
-                , STRING_AGG(s.skill_name, ', ' order by cnt desc) as skill_name_list
+                , STRING_AGG(s.skill_name, ', ' order by cnt desc) as skills_list
             from dim_skills s 
             join skills_count sc
                 on s.skill_name = sc.skill_name 
             group by s.fk_vacancy_id
     )
 select fk_vacancy_id as vacancy_pk_id
-        , COALESCE(skill_name_list,'N/A') as skill_name_list
+        , COALESCE(skills_list,'N/A') as skills_list
     from  dim_skills_with_vacancy_id 

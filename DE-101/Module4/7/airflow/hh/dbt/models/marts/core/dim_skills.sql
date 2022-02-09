@@ -4,5 +4,5 @@ with vacancies_with_pk as
             from {{ ref('vacancies_with_pk')}}
     )
 select vacancy_pk_id as fk_vacancy_id
-        , lower(json_array_elements(key_skills::json) ->> 'name') as skill_name
+        , trim(lower(json_array_elements(key_skills::json) ->> 'name')) as skill_name
     from vacancies_with_pk
