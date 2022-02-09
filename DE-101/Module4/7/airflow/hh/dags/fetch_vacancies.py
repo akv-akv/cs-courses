@@ -17,6 +17,7 @@ from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.operators.latest_only import LatestOnlyOperator
 
 
 from hh.operators import HeadHunterRuFetchVacanciesOperator
@@ -25,7 +26,7 @@ from hh.operators import HeadHunterRuFetchVacanciesOperator
 dag = DAG(
     dag_id="hh_dwh",
     description="Fetches vacancies from the HeadHunter API using a custom operator.",
-    start_date=days_ago(29),
+    start_date=days_ago(3),
     schedule_interval="@daily",
     )
 vacancies_path = "/data/hh_vacancies"
@@ -37,7 +38,7 @@ fetch_vacancies = HeadHunterRuFetchVacanciesOperator(
     task_id="fetch_vacancies",
     date_from="{{ds}}",
     date_to="{{ds}}",
-    text="'data engineer'",
+    text='NAME:("data engineer" OR "etl" OR "dwh")',
     output_path=vacancies_path+"/{{ds}}/",
     dag=dag
 )
@@ -140,6 +141,10 @@ def _upload_vacancies_to_stage(**context):
                             #dtype=dtypes
                             )
 
+latest_only = LatestOnlyOperator(
+    task_id="latest_only",
+    dag=dag,
+)
 
 
 upload_vacancies_to_stage = PythonOperator(
@@ -154,7 +159,39 @@ upload_currency_rates_to_stage = PythonOperator(
     dag=dag
 )
 
+join_branch = DummyOperator(
+           task_id="join_branch",
+           trigger_rule="none_failed"
+)
+
+DBT_DIR = "/opt/airflow/dbt"
+
+dbt_run = BashOperator(
+    task_id="dbt_run",
+    bash_command=(
+        f"cd {DBT_DIR} && dbt run --profiles-dir {DBT_DIR}"
+    ),
+    dag=dag,
+)
+
+dbt_test = BashOperator(
+    task_id="dbt_test",
+    bash_command=(
+        f"cd {DBT_DIR} && dbt test --profiles-dir {DBT_DIR}"
+    ),
+    dag=dag,
+)
+
+dbt_docs = BashOperator(
+    task_id="dbt_docs",
+    bash_command=(
+        f"cd {DBT_DIR} && dbt docs generate --profiles-dir {DBT_DIR}"
+    ),
+    dag=dag,
+)
 
 start >> [fetch_vacancies, fetch_currencies]
 fetch_vacancies >> upload_vacancies_to_stage
 fetch_currencies >> upload_currency_rates_to_stage
+[upload_vacancies_to_stage, upload_currency_rates_to_stage] >> join_branch
+join_branch >> latest_only >> dbt_run >> dbt_test >>dbt_docs
