@@ -18,3 +18,15 @@ CREATE TABLE stg.hh_vacancies
         , type_name VARCHAR(100)
         , updated_at TIMESTAMP DEFAULT current_timestamp
     )
+
+
+CREATE TABLE stg.cbr_currencies
+    (
+        ID  VARCHAR(20)
+        , NumCode INT
+        , CharCode VARCHAR(10)  
+        , Nominal INT        
+        , Name VARCHAR(100)
+        , Value DECIMAL       
+        , date DATE
+    )
