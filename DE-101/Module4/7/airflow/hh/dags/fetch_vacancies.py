@@ -26,13 +26,15 @@ from hh.operators import HeadHunterRuFetchVacanciesOperator
 dag = DAG(
     dag_id="hh_dwh",
     description="Fetches vacancies from the HeadHunter API using a custom operator.",
-    start_date=days_ago(3),
+    start_date=days_ago(29),
     schedule_interval="@daily",
     )
 vacancies_path = "/data/hh_vacancies"
 currency_rates_path = "/data/cbr_currencies"
 
-start = DummyOperator(task_id="start")
+start = DummyOperator(task_id="start", 
+                        depends_on_past=True,
+                        wait_for_downstream=True)
 
 fetch_vacancies = HeadHunterRuFetchVacanciesOperator(
     task_id="fetch_vacancies",
