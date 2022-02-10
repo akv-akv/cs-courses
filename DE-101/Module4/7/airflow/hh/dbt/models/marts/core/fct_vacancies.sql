@@ -79,6 +79,7 @@ select    v.vacancy_pk_id                             as vacancy_pk_id
             CASE WHEN is_salary_gross='True' 
                  THEN 0.87 
                  ELSE 1 END                         as salary_upper_limit_local_currency_net
+        , v.salary_currency                         as local_currency
     from stage v
     left join dim_schedule_types sch
         ON v.schedule_name = sch.schedule_name

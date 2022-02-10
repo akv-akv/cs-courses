@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: fct_vacancies
+    description: Vacancies fact table
+    columns:
+      - name: vacancy_pk_id
+        description: Vacancy primary key
+        tests:
+          - unique
+      - name: vacancy_pk_bk_id
+        description: Vacancy business key - HH.RU identificator
+      - name: published_date
+        description: Publication date - Foreign key for dim_dates
+        tests:
+          - relationships:
+              to: ref('dim_dates')
+              field: date_day
+      - name: published_time
+        description: Publication time
+      - name: vacancy_name
+        description: Position name
+      - name: vacancy_description
+        description: Vacancy description
+      - name: vacancy_url
+        description: Vacancy Url
+      - name: skills_list
+        description: List of skill required in vacancy
+      - name: count_vacancy_skills
+        description: Number of skills requires in vacancy
+      - name: count_matched_skills
+        description: Number of skills that match user's skillset
+      - name: skill_match_percentage
+        description: Percentage of matched skills
+      - name: matched_skills_list
+        description: List of matched skills
+      - name: unmatched_skills_list
+        description: List of unmatched skills
+      - name: fk_schedule_id
+        description: Foreign key for dim_schedule_types
+        tests:
+          - relationships:
+              to: ref('dim_schedule_types')
+              field: pk_id
+      - name: fk_experience_id
+        description: Foreign key for dim_experience_types
+        tests:
+          - relationships:
+              to: ref('dim_experience_types')
+              field: pk_id
+      - name: fk_area_id
+        description: Foreign key for dim_areas
+        tests:
+          - relationships:
+              to: ref('dim_areas')
+              field: pk_id
+      - name: fk_employer_id
+        description: Foreign key for dim_employers
+        tests:
+          - relationships:
+              to: ref('dim_employers')
+              field: pk_id
+      - name: salary_lower_limit_rub_net
+      - name: salary_upper_limit_rub_net
+      - name: salary_lower_limit_local_currency_net
+      - name: salary_upper_limit_local_currency_net
+      - name: local_currency
+
+
+
+  - name: dim_dates
+    columns:
+      - name: date_pk_id
+        config:
+          type: date
+          primary_key: true
