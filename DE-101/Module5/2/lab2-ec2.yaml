@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: 
+  Sample template to provision an EC2 Instance with public IP in public subnet and EC2 Instance in private subnet. 
+  Create a Security Group and associate with this EC2.
+
+Parameters:
+  VPCStackName:
+    Description: Name of the VPC stack
+    Type: String
+    Default: vpc-test
+  
+  KeyPairName:
+    Description: Name of an existing EC2 KeyPair for access to EC2 instances
+    Type: AWS::EC2::KeyPair::KeyName
+
+Resources:
+  # create a security group
+  publicSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Enable ssh(22) access
+      GroupName: Public-SG
+      VpcId: 
+        Fn::ImportValue: !Sub "${VPCStackName}-VPCID" # note here we are not using AWS::StackName
+      SecurityGroupIngress:
+        # allow ssh  
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0 # only for demo else use your IP or corporate gateway IP
+      Tags: 
+       - Key: Name
+         Value: public-sg
+       - Key: Application
+         Value:
+           Ref: "AWS::StackName"
+  
+  privateSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Enable ssh(22) access
+      GroupName: Private-SG
+      VpcId: 
+        Fn::ImportValue: !Sub "${VPCStackName}-VPCID" # note here we are not using AWS::StackName
+      SecurityGroupIngress:
+        # allow ssh  
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 10.0.1.0/24
+      Tags: 
+       - Key: Name
+         Value: private-sg
+       - Key: Application
+         Value:
+           Ref: "AWS::StackName"
+    
+
+  # EC2 instance which will have public access and ssh
+  publicEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-0de4b8910494dba0f
+      SubnetId:
+        Fn::ImportValue: !Sub "${VPCStackName}-PUBLIC-SUBNET"      
+      SecurityGroupIds:
+        - !Ref publicSG
+      KeyName: !Ref KeyPairName
+      Tags: 
+       - Key: Name
+         Value: public-ec2
+       - Key: Application
+         Value:
+           Ref: "AWS::StackName"
+
+  # EC2 instance in private subnet
+  privateEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-0de4b8910494dba0f
+      SubnetId:
+        Fn::ImportValue: !Sub "${VPCStackName}-PRIVATE-SUBNET"      
+      SecurityGroupIds:
+        - !Ref privateSG
+      KeyName: !Ref KeyPairName
+      Tags: 
+       - Key: Name
+         Value: private-ec2
+       - Key: Application
+         Value:
+           Ref: "AWS::StackName"
+
+
+
