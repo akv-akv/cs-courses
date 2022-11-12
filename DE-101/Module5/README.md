@@ -14,6 +14,8 @@ Create diagram and implement it with AWS Console for the following stack:
 
 Solution implemented with 2 AWS CloudFormation stacks - one for [VPC and subnets](./2/cloudformation/lab2-vpc.yaml) and the other for [ec2 instances](./2/cloudformation/lab2-ec2.yaml).
 
+Updated: added [solution with Terraform](./2/terraform/)
+
 ## Homework 3
 
 ### Task
