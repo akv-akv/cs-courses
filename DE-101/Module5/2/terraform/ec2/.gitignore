@@ -1,0 +1,5 @@
+.terraform
+.terraform.lock.hcl
+terraform_plan
+terraform.tfstate*
+akv-key.pem
