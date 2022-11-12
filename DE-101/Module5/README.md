@@ -12,7 +12,7 @@ Create diagram and implement it with AWS Console for the following stack:
 
 ![](./2/diagram.png)
 
-Solution implemented with 2 AWS CloudFormation stacks - one for [VPC and subnets](./2/lab2-vpc.yaml) and the other for [ec2 instances](./2/lab2-ec2.yaml).
+Solution implemented with 2 AWS CloudFormation stacks - one for [VPC and subnets](./2/cloudformation/lab2-vpc.yaml) and the other for [ec2 instances](./2/cloudformation/lab2-ec2.yaml).
 
 ## Homework 3
 
